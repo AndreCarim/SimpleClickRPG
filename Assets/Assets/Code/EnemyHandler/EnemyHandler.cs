@@ -239,9 +239,13 @@ public class EnemyHandler : MonoBehaviour
         {
             healthText.text = NumberAbrev.ParseDouble(1, 0) + "/" + NumberAbrev.ParseDouble(currentMaxHealth, 0);
         }
-        else
+        else if(currentHealth > 10000)
         {
             healthText.text = NumberAbrev.ParseDouble(currentHealth, 2) + "/" + NumberAbrev.ParseDouble(currentMaxHealth, 2);
+        }
+        else
+        {
+            healthText.text = NumberAbrev.ParseDouble(currentHealth, 0) + "/" + NumberAbrev.ParseDouble(currentMaxHealth, 0);
         }
             
     }
