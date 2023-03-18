@@ -106,11 +106,19 @@ public class StrengthHandler : MonoBehaviour
         if(currentUpgradePrice > 10000)
         {
             upgradeStrengthPriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 2);
-            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower, 2);
         }
         else
         {
             upgradeStrengthPriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 0);
+            
+        }
+
+        if(currentStrengthPower > 10000)
+        {
+            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower, 2);
+        }
+        else
+        {
             strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower, 0);
         }
         

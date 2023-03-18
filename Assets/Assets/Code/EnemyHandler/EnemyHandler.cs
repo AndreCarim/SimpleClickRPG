@@ -34,7 +34,6 @@ public class EnemyHandler : MonoBehaviour
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip diedSound;
-    [SerializeField] private AudioClip damageSound;
     [SerializeField] private AudioClip inventoryFullSound;
 
     [SerializeField] private Slider healthBarSlider;
@@ -112,7 +111,7 @@ public class EnemyHandler : MonoBehaviour
                 currentHealth -= damageAmount;
                 
 
-                playDamageSound();
+                
 
             }else if(currentHealth - damageAmount <= 0 ){
                 currentHealth = 0;
@@ -180,7 +179,7 @@ public class EnemyHandler : MonoBehaviour
 
     private void handleBoss()
     {
-        currentMaxHealth = currentMaxHealth * 10;
+        currentMaxHealth = currentMaxHealth * 8;
         currentHealth = currentMaxHealth;
         dropItemValue = dropItemValue * 8;
     }
@@ -197,14 +196,6 @@ public class EnemyHandler : MonoBehaviour
         }
     }
 
-    private void playDamageSound(){  
-        if(audioSource.clip != diedSound ||  !audioSource.isPlaying  ){
-            if(audioSource.clip != inventoryFullSound || !audioSource.isPlaying){
-                audioSource.clip = damageSound;
-                audioSource.Play();
-            }     
-        }
-    }
 
     private void changeColor(){
         Color newColor = new Color(Random.value, Random.value, Random.value);
@@ -350,25 +341,25 @@ public class EnemyHandler : MonoBehaviour
     public void save()
     {
         //nao mudar depois de lançar
-        ES3.Save("FinalCurrentMaxHealth", currentMaxHealth);
-        ES3.Save("FinalDropItemValue", dropItemValue);
-        ES3.Save("FinalAmountKilled", amountKilled);
-        ES3.Save("FinalCurrentStage", currentStage);
-        ES3.Save("FinalCurrentHealth", currentHealth);
-        ES3.Save("FinalBehindTheSceneHealth", behindTheSceneHealth);
-        ES3.Save("FinalIsBoss", isBoss);
+        ES3.Save("currentMaxHealth", currentMaxHealth);
+        ES3.Save("dropItemValue", dropItemValue);
+        ES3.Save("amountKilled", amountKilled);
+        ES3.Save("currentStage", currentStage);
+        ES3.Save("currentHealth", currentHealth);
+        ES3.Save("behindTheSceneHealth", behindTheSceneHealth);
+        ES3.Save("isBoss", isBoss);
     }
 
     private void load()
     {
         //nao mudar os nomes depois de lançar
-        currentMaxHealth = ES3.Load<double>("FinalCurrentMaxHealth", 1500);
-        dropItemValue = ES3.Load<double>("FinalDropItemValue", 50);
-        amountKilled = ES3.Load<double>("FinalAmountKilled", 0);
-        currentStage = ES3.Load<double>("FinalCurrentStage", 1);
-        currentHealth = ES3.Load<double>("FinalCurrentHealth", currentMaxHealth);
-        behindTheSceneHealth = ES3.Load<double>("FinalBehindTheSceneHealth", 500);
-        isBoss = ES3.Load<bool>("FinalIsBoss", false);
+        currentMaxHealth = ES3.Load<double>("currentMaxHealth", 1500);
+        dropItemValue = ES3.Load<double>("dropItemValue", 50);
+        amountKilled = ES3.Load<double>("amountKilled", 0);
+        currentStage = ES3.Load<double>("currentStage", 1);
+        currentHealth = ES3.Load<double>("currentHealth", currentMaxHealth);
+        behindTheSceneHealth = ES3.Load<double>("behindTheSceneHealth", 500);
+        isBoss = ES3.Load<bool>("isBoss", false);
     }
 
 

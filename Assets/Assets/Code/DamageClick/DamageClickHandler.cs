@@ -12,6 +12,10 @@ public class DamageClickHandler : MonoBehaviour
 
     [SerializeField]private GameObject popUpText;
 
+    [SerializeField]private AudioSource audioSource;
+    
+    
+
     private float clickEveryXSeconds; //1 is one second, 0.1 is one tenth of a second
     private bool isReadyToClick;
     private float currentTime;
@@ -56,7 +60,7 @@ public class DamageClickHandler : MonoBehaviour
                 Vector2 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
                 GameObject newObj = Instantiate(popUpText, touchPosition, Quaternion.identity);
-                TMP_Text newText = newObj.gameObject.transform.GetChild(0).GetComponent<TMP_Text>();//
+                TMP_Text newText = newObj.gameObject.transform.GetChild(0).GetComponent<TMP_Text>();
 
                 if(strengthHandler.getStrengthPower() > 10000)
                 {
@@ -66,9 +70,18 @@ public class DamageClickHandler : MonoBehaviour
                 {
                     newText.text = NumberAbrev.ParseDouble(strengthHandler.getStrengthPower(), 0);
                 }
+
+
+                playSound();
                 
             }
         } 
+    }
+
+
+    private void playSound()
+    {
+        audioSource.Play();
     }
 
 

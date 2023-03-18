@@ -62,13 +62,13 @@ public class GoldHandler : MonoBehaviour
 
     public void save()
     {
-        ES3.Save("FinalCurrentAmountOfGold", currentAmountOfGold);
+        ES3.Save("currentAmountOfGold", currentAmountOfGold);
         
     }
 
     private void load()
     {
-        currentAmountOfGold = ES3.Load<double>("FinalCurrentAmountOfGold", 0); 
+        currentAmountOfGold = ES3.Load<double>("currentAmountOfGold", 0); 
     }
 
 }

@@ -130,12 +130,19 @@ public class BackPackHandler : MonoBehaviour
 
         if(totalItemsValue > 10000)
         {
-            currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue,2);
-            upgradePriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice,2);
+            currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue,2); 
         }
         else
         {
             currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue, 0);
+        }
+
+        if(currentUpgradePrice > 10000)
+        {
+            upgradePriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 2);
+        }
+        else
+        {
             upgradePriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 0);
         }
         
@@ -165,23 +172,23 @@ public class BackPackHandler : MonoBehaviour
     {
         if (isAdActive == false)
         {
-            ES3.Save("FinalCurrentBackPackMaxSize", currentBackPackMaxSize);
+            ES3.Save("currentBackPackMaxSize", currentBackPackMaxSize);
         }
         else
         {
-            ES3.Save("FinalCurrentBackPackMaxSize", currentBackPackMaxSize / 2);
+            ES3.Save("currentBackPackMaxSize", currentBackPackMaxSize / 2);
         }
 
-        ES3.Save("FinalCurrentBackPack", currentBackPack);
-        ES3.Save("FinalCurrentUpgradePriceBackPack", currentUpgradePrice);
-        ES3.Save("FinalTotalItemsValue", totalItemsValue);    
+        ES3.Save("currentBackPack", currentBackPack);
+        ES3.Save("currentUpgradePrice", currentUpgradePrice);
+        ES3.Save("totalItemsValue", totalItemsValue);    
     }
 
     private void load()
     {
-        currentBackPackMaxSize = ES3.Load<double>("FinalCurrentBackPackMaxSize", 5);
-        currentBackPack = ES3.Load<double>("FinalCurrentBackPack", 0);
-        currentUpgradePrice = ES3.Load<double>("FinalCurrentUpgradePriceBackPack", 1000000000);
-        totalItemsValue = ES3.Load<double>("FinalTotalItemsValue", 0);
+        currentBackPackMaxSize = ES3.Load<double>("currentBackPackMaxSize", 5);
+        currentBackPack = ES3.Load<double>("currentBackPack", 0);
+        currentUpgradePrice = ES3.Load<double>("currentUpgradePrice", 1000000000);
+        totalItemsValue = ES3.Load<double>("totalItemsValue", 0);
     }
 }

@@ -22,7 +22,7 @@ public class SellHandler : MonoBehaviour
     private bool isReadyToSell = true;
     private float currentTime;
     private float startTime = 30f;
-    private string sellStateText = "SELL";
+    private string sellStateText = "$$$";
 
     
     
