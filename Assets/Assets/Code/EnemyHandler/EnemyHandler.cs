@@ -241,7 +241,7 @@ public class EnemyHandler : MonoBehaviour
         }
         else
         {
-            healthText.text = NumberAbrev.ParseDouble(currentHealth, 0) + "/" + NumberAbrev.ParseDouble(currentMaxHealth, 0);
+            healthText.text = NumberAbrev.ParseDouble(currentHealth, 2) + "/" + NumberAbrev.ParseDouble(currentMaxHealth, 2);
         }
             
     }

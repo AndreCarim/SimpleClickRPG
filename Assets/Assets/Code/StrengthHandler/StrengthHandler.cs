@@ -102,8 +102,19 @@ public class StrengthHandler : MonoBehaviour
 
 
     private void setStrengthPowerText(){
-        strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower,0);
-        upgradeStrengthPriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice,0);
+
+        if(currentUpgradePrice > 10000)
+        {
+            upgradeStrengthPriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 2);
+            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower, 2);
+        }
+        else
+        {
+            upgradeStrengthPriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 0);
+            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower, 0);
+        }
+        
+        
     }
 
     private void playSound(){
@@ -135,6 +146,8 @@ public class StrengthHandler : MonoBehaviour
             ES3.Save("currentStrengthPower", currentStrengthPower / 2);
             ES3.Save("behindTheScenePower", behindTheScenePower /2);
         }
+
+       
 
         ES3.Save("currentUpgradePrice", currentUpgradePrice);
         ES3.Save("behindTheScenePrice", behindTheScenePrice);

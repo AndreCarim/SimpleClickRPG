@@ -45,9 +45,9 @@ public class GoldHandler : MonoBehaviour
     
 
     private void setGoldAmountText(){
-        if(currentAmountOfGold > 1000)
+        if(currentAmountOfGold > 10000)
         {
-            goldAmountText.text = NumberAbrev.ParseDouble(currentAmountOfGold, 1);
+            goldAmountText.text = NumberAbrev.ParseDouble(currentAmountOfGold, 2);
         }
         else
         {

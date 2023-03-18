@@ -126,15 +126,17 @@ public class BackPackHandler : MonoBehaviour
     public void setText(){
         //this will set both the price and space text
         floatingBackPackCurrentAmountText.text = NumberAbrev.ParseDouble(currentBackPack) + "/" + NumberAbrev.ParseDouble(currentBackPackMaxSize);
-        upgradePriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice);
+        
 
-        if(totalItemsValue > 1000.0)
+        if(totalItemsValue > 10000)
         {
-            currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue,1);
+            currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue,2);
+            upgradePriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice,2);
         }
         else
         {
             currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue, 0);
+            upgradePriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 0);
         }
         
     }

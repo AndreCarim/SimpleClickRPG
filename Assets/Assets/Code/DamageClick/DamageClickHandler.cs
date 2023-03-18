@@ -57,7 +57,16 @@ public class DamageClickHandler : MonoBehaviour
 
                 GameObject newObj = Instantiate(popUpText, touchPosition, Quaternion.identity);
                 TMP_Text newText = newObj.gameObject.transform.GetChild(0).GetComponent<TMP_Text>();//
-                newText.text = NumberAbrev.ParseDouble(strengthHandler.getStrengthPower(),0);
+
+                if(strengthHandler.getStrengthPower() > 10000)
+                {
+                    newText.text = NumberAbrev.ParseDouble(strengthHandler.getStrengthPower(), 2);
+                }
+                else
+                {
+                    newText.text = NumberAbrev.ParseDouble(strengthHandler.getStrengthPower(), 0);
+                }
+                
             }
         } 
     }

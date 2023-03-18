@@ -172,7 +172,7 @@ public class AutoClickHandler : MonoBehaviour
 
     private void setText()
     {
-        currentAutoClickTimePriceText.text = NumberAbrev.ParseDouble(autoClickTimePrice);
+        
         if(autoClickEveryXSeconds > 1f)
         {
             currentAutoClickTimePriceText.text = NumberAbrev.ParseDouble(autoClickTimePrice);
@@ -182,16 +182,19 @@ public class AutoClickHandler : MonoBehaviour
             currentAutoClickTimePriceText.text = "MAX";
         }
 
-        currentAutoClickStrengthPriceText.text = NumberAbrev.ParseDouble(autoClickStrengthPrice);
+     
 
-
-        if(autoClickStrength > 1000)
+        if(autoClickStrength > 10000)
         {
-            currentAmountOfAutoClickStrengthText.text = NumberAbrev.ParseDouble(autoClickStrength, 1);
+            currentAmountOfAutoClickStrengthText.text = NumberAbrev.ParseDouble(autoClickStrength, 2);
+            currentAutoClickStrengthPriceText.text = NumberAbrev.ParseDouble(autoClickStrengthPrice, 2);
+            currentAutoClickTimePriceText.text = NumberAbrev.ParseDouble(autoClickTimePrice, 2);
         }
         else
         {
             currentAmountOfAutoClickStrengthText.text = NumberAbrev.ParseDouble(autoClickStrength, 0);
+            currentAutoClickStrengthPriceText.text = NumberAbrev.ParseDouble(autoClickStrengthPrice, 0);
+            currentAutoClickTimePriceText.text = NumberAbrev.ParseDouble(autoClickTimePrice, 0);
         }
         
     }
