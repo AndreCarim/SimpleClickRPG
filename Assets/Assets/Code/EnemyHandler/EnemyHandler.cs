@@ -16,6 +16,8 @@ public class EnemyHandler : MonoBehaviour
     private double dropItemValue; //have to save this
     private double behindTheSceneHealth;//incremental number
 
+    private double healAmount;
+
     
 
 
@@ -49,40 +51,24 @@ public class EnemyHandler : MonoBehaviour
     [SerializeField] Sprite heartSprite;
     [SerializeField] Sprite bossSprite;
     [SerializeField] Image healthBarIcon;
-    
-    //enemys sprites
-    [SerializeField] private Sprite stageSprite1;
-    [SerializeField] private Sprite stageSprite2;
-    [SerializeField] private Sprite stageSprite3;
-    [SerializeField] private Sprite stageSprite4;
-    [SerializeField] private Sprite stageSprite5;
-    [SerializeField] private Sprite stageSprite6;
-    [SerializeField] private Sprite stageSprite7;
-    [SerializeField] private Sprite stageSprite8;
-    [SerializeField] private Sprite stageSprite9;
-    [SerializeField] private Sprite stageSprite10;
-    [SerializeField] private Sprite stageSprite11;
-    [SerializeField] private Sprite stageSprite12;
-    [SerializeField] private Sprite stageSprite13;
-    [SerializeField] private Sprite stageSprite14;
-    [SerializeField] private Sprite stageSprite15;
 
-    //backGroundSprite
-    [SerializeField] private Sprite backGroundSprite1;
-    [SerializeField] private Sprite backGroundSprite2;
-    [SerializeField] private Sprite backGroundSprite3;
-    [SerializeField] private Sprite backGroundSprite4;
-    [SerializeField] private Sprite backGroundSprite5;
-    
+    [SerializeField] Sprite[] enemySprites;
+    [SerializeField] Sprite[] backGroundSprites;
+    private Sprite currentBackGroundSprite;
 
 
-    private SpriteRenderer sprite;
+
+    //timer
+    private float currentTime;
+    private float healEveryXSeconds;
 
 
 
     void Start(){
         audioSource = gameObject.GetComponent<AudioSource>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
+        healEveryXSeconds = 2f;
 
         load();
 
@@ -101,6 +87,26 @@ public class EnemyHandler : MonoBehaviour
         }
     }
 
+
+
+
+    //TIMER for the enemy healing
+    void FixedUpdate()
+    {
+
+        currentTime -= 1 * Time.deltaTime; // decreasing the amount of seconds inside the currentTime(starts at 1)
+        if (currentTime <= 0)
+        { //check if the timer is done
+
+            currentTime = healEveryXSeconds; //set the current time back to 30
+            if (currentHealth < currentMaxHealth)
+            {
+                healEnemy();
+            }
+
+        }
+
+    }
 
     public void setDamage(double damageAmount){
         
@@ -167,19 +173,20 @@ public class EnemyHandler : MonoBehaviour
     private void handleUpgradeStage(){
         //changing back from a boss
         //it always will upgrade after a boss
-        currentMaxHealth = currentMaxHealth / 10;
-        dropItemValue = dropItemValue / 10;
+        currentMaxHealth = currentMaxHealth / 4;
+        dropItemValue = dropItemValue / 8;
 
         currentMaxHealth = currentMaxHealth + behindTheSceneHealth; //hp handler
-        behindTheSceneHealth = behindTheSceneHealth * 1.6; //40% every 10 kills
+        behindTheSceneHealth = behindTheSceneHealth + 550; //550 every 10 kills
+        healAmount = healAmount + 50; // increasing the amount of healing
         currentHealth = currentMaxHealth;
         currentStage += 1; //increase stage
-        dropItemValue = dropItemValue * 4; // incriese drop values
+        dropItemValue = dropItemValue + 25; // incriese drop values
     }
 
     private void handleBoss()
     {
-        currentMaxHealth = currentMaxHealth * 8;
+        currentMaxHealth = currentMaxHealth * 4;
         currentHealth = currentMaxHealth;
         dropItemValue = dropItemValue * 8;
     }
@@ -196,6 +203,23 @@ public class EnemyHandler : MonoBehaviour
         }
     }
 
+
+    private void healEnemy()
+    {
+        if(currentHealth + healAmount <= currentMaxHealth)
+        {
+            //if the healAmount is not enough to make the full max health
+            currentHealth = currentHealth + healAmount;
+        }
+        else
+        {
+            //if the healAmount heals all the way to full max health;
+            currentHealth = currentMaxHealth;
+        }
+
+       
+        healthBarUpdate();
+    }
 
     private void changeColor(){
         Color newColor = new Color(Random.value, Random.value, Random.value);
@@ -242,89 +266,34 @@ public class EnemyHandler : MonoBehaviour
     }
 
     private void changeSprite(){
-        switch(currentStage){
-            case 1:
-                spriteRenderer.sprite = stageSprite1;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 2:
-                spriteRenderer.sprite = stageSprite2;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 3:
-                spriteRenderer.sprite = stageSprite3;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 4:
-                spriteRenderer.sprite = stageSprite4;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 5:
-                spriteRenderer.sprite = stageSprite5;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 6:
-                spriteRenderer.sprite = stageSprite6;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 7:
-                spriteRenderer.sprite = stageSprite7;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 8:
-                spriteRenderer.sprite = stageSprite8;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 9:
-                spriteRenderer.sprite = stageSprite9;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 10:
-                spriteRenderer.sprite = stageSprite10;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 11:
-                spriteRenderer.sprite = stageSprite11;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 12:
-                spriteRenderer.sprite = stageSprite12;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 13:
-                spriteRenderer.sprite = stageSprite13;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 14:
-                spriteRenderer.sprite = stageSprite14;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 15:
-                spriteRenderer.sprite = stageSprite15;
-                backGroundSpriteRenderer.sprite = backGroundSprite1;
-                break;
-            case 16:
-                spriteRenderer.sprite = stageSprite15;
-                backGroundSpriteRenderer.sprite = backGroundSprite2;
-                break;
-            case 17:
-                spriteRenderer.sprite = stageSprite15;
-                backGroundSpriteRenderer.sprite = backGroundSprite3;
-                break;
-            case 18:
-                spriteRenderer.sprite = stageSprite15;
-                backGroundSpriteRenderer.sprite = backGroundSprite4;
-                break;
-            case 19:
-                spriteRenderer.sprite = stageSprite15;
-                backGroundSpriteRenderer.sprite = backGroundSprite5;
-                break;
-            default:
-                spriteRenderer.sprite = stageSprite15;
-                backGroundSpriteRenderer.sprite = backGroundSprite5;
-                break;
+        //cheking if there is still sprites out there
+        if((int)currentStage <= enemySprites.Length -1)
+        {
+            spriteRenderer.sprite = enemySprites[(int)currentStage - 1];
+        }
+        else
+        {
+            spriteRenderer.sprite = enemySprites[enemySprites.Length - 1];
+        }
+        
+        //checking if is multiple of 50 so it can change the backGround
+        if(amountKilled % 50 == 0 && amountKilled != 0)
+        {
+           
+            //if the current stage is not bigger than the amount of sprites
+            if((int)amountKilled / 50 <= backGroundSprites.Length - 1)
+            {
+                currentBackGroundSprite = backGroundSprites[(int)amountKilled / 50];
+            }
+            else
+            {
+                currentBackGroundSprite = backGroundSprites[backGroundSprites.Length - 1];
+            }
             
         }
+
+        backGroundSpriteRenderer.sprite = currentBackGroundSprite;
+
     }
 
     private void setTexts(){
@@ -348,18 +317,22 @@ public class EnemyHandler : MonoBehaviour
         ES3.Save("currentHealth", currentHealth);
         ES3.Save("behindTheSceneHealth", behindTheSceneHealth);
         ES3.Save("isBoss", isBoss);
+        ES3.Save("currentBackGroundSprite", currentBackGroundSprite);
+        ES3.Save("healAmount", healAmount);
     }
 
     private void load()
     {
         //nao mudar os nomes depois de lançar
-        currentMaxHealth = ES3.Load<double>("currentMaxHealth", 1500);
-        dropItemValue = ES3.Load<double>("dropItemValue", 50);
-        amountKilled = ES3.Load<double>("amountKilled", 0);
-        currentStage = ES3.Load<double>("currentStage", 1);
-        currentHealth = ES3.Load<double>("currentHealth", currentMaxHealth);
-        behindTheSceneHealth = ES3.Load<double>("behindTheSceneHealth", 500);
-        isBoss = ES3.Load<bool>("isBoss", false);
+        currentMaxHealth = ES3.Load<double>("currentMaxHealth123124533", 1500);
+        dropItemValue = ES3.Load<double>("dropItemValue123123", 100);
+        amountKilled = ES3.Load<double>("amountKilled123123", 0);
+        currentStage = ES3.Load<double>("currentStage123123", 1);
+        currentHealth = ES3.Load<double>("currentHealth234324", currentMaxHealth);
+        behindTheSceneHealth = ES3.Load<double>("behindTheSceneHealth123123", 250);
+        isBoss = ES3.Load<bool>("isBoss123123", false);
+        currentBackGroundSprite = ES3.Load<Sprite>("currentBackGroundSprite123213", backGroundSprites[0]);
+        healAmount = ES3.Load<double>("healAmount123213", 50);
     }
 
 

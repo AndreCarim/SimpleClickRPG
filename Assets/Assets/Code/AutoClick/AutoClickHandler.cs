@@ -96,7 +96,7 @@ public class AutoClickHandler : MonoBehaviour
 
 
             //handle the new price for the upgrade
-            autoClickStrengthPrice = autoClickStrengthPrice * 800;
+            autoClickStrengthPrice = autoClickStrengthPrice * 10;
 
             playSoundStrength();
             setText();
@@ -119,7 +119,7 @@ public class AutoClickHandler : MonoBehaviour
                 autoClickEveryXSeconds = autoClickEveryXSeconds - 0.1f; //decrease the total amount of seconds to wait by 0.1 seconds (one tenth of a second)
 
 
-                autoClickTimePrice = autoClickTimePrice * 1000; // price will increase by 1000x every upgrade
+                autoClickTimePrice = autoClickTimePrice * 11; // price will increase by 1000x every upgrade
                 playSoundTime();
                 setText();
             }
@@ -240,7 +240,7 @@ public class AutoClickHandler : MonoBehaviour
         autoClickStrength = ES3.Load<double>("autoClickStrength", 0);
         autoClickEveryXSeconds = ES3.Load<float>("autoClickEveryXSeconds", 2f);
         autoClickStrengthPrice = ES3.Load<double>("autoClickStrengthPrice", 10000);
-        autoClickTimePrice = ES3.Load<double>("autoClickTimePrice", 100000);
+        autoClickTimePrice = ES3.Load<double>("autoClickTimePrice", 20000);
         isOn = ES3.Load<bool>("isOn", false);
     }
 

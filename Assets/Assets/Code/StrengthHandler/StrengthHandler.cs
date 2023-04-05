@@ -73,15 +73,15 @@ public class StrengthHandler : MonoBehaviour
 
             if(isAdActive == false){//handling strength   
                 currentStrengthPower = currentStrengthPower + behindTheScenePower;
-                behindTheScenePower = behindTheScenePower * 1.1; //increases 10% per upgrade
+                behindTheScenePower = behindTheScenePower + 5; //increases 10% per upgrade
             }
             else if(isAdActive == true){   
-                currentStrengthPower = (currentStrengthPower*1.4) + behindTheScenePower;
-                behindTheScenePower = behindTheScenePower * 1.4;
+                currentStrengthPower = (currentStrengthPower+20) + behindTheScenePower;
+                behindTheScenePower = behindTheScenePower +20;
             }
 
 
-            behindTheScenePrice = behindTheScenePrice * 1.5;//handling price
+            behindTheScenePrice = behindTheScenePrice + 15;//handling price
             currentUpgradePrice = currentUpgradePrice + behindTheScenePrice;
         }
     }
@@ -157,17 +157,17 @@ public class StrengthHandler : MonoBehaviour
 
        
 
-        ES3.Save("currentUpgradePrice", currentUpgradePrice);
+        ES3.Save("currentStrengthUpgradePrice", currentUpgradePrice);
         ES3.Save("behindTheScenePrice", behindTheScenePrice);
         
     }
 
     private void load()
     {
-        currentStrengthPower = ES3.Load<double>("currentStrengthPower", 50);
-        currentUpgradePrice = ES3.Load<double>("currentUpgradePrice", 20);
-        behindTheScenePrice = ES3.Load<double>("behindTheScenePrice", 25);
-        behindTheScenePower = ES3.Load<double>("behindTheScenePower", 4);
+        currentStrengthPower = ES3.Load<double>("currentStrengthPower12321", 50);
+        currentUpgradePrice = ES3.Load<double>("currentStrengthUpgradePrice312321", 20);
+        behindTheScenePrice = ES3.Load<double>("behindTheScenePrice123123", 25);
+        behindTheScenePower = ES3.Load<double>("behindTheScenePower13123", 4);
     }
 
     

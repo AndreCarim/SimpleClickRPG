@@ -49,13 +49,15 @@ public class DamageClickHandler : MonoBehaviour
     public void click(){
         if(isReadyToClick == true) // check to see if the player can click
         {
-            enemyHandlerCode.setDamage(strengthHandler.getStrengthPower());
-
             isReadyToClick = false;
+
+            Touch touch = Input.GetTouch(0);
 
             if (Input.touchCount > 0)
             {
-                Touch touch = Input.GetTouch(0);
+                enemyHandlerCode.setDamage(strengthHandler.getStrengthPower());
+
+                
 
                 Vector2 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
@@ -71,7 +73,7 @@ public class DamageClickHandler : MonoBehaviour
                     newText.text = NumberAbrev.ParseDouble(strengthHandler.getStrengthPower(), 0);
                 }
 
-
+                
                 playSound();
                 
             }

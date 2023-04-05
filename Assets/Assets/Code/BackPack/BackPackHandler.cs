@@ -65,7 +65,7 @@ public class BackPackHandler : MonoBehaviour
         goldHandler.decreaseAmountOfGold(currentUpgradePrice);
 
        
-        currentUpgradePrice = currentUpgradePrice   * 100;//upgrade the current price of an upgrade
+        currentUpgradePrice = currentUpgradePrice   * 10;//upgrade the current price of an upgrade
         
         
 
@@ -180,7 +180,7 @@ public class BackPackHandler : MonoBehaviour
         }
 
         ES3.Save("currentBackPack", currentBackPack);
-        ES3.Save("currentUpgradePrice", currentUpgradePrice);
+        ES3.Save("currentBackPackUpgradePrice", currentUpgradePrice);
         ES3.Save("totalItemsValue", totalItemsValue);    
     }
 
@@ -188,7 +188,7 @@ public class BackPackHandler : MonoBehaviour
     {
         currentBackPackMaxSize = ES3.Load<double>("currentBackPackMaxSize", 5);
         currentBackPack = ES3.Load<double>("currentBackPack", 0);
-        currentUpgradePrice = ES3.Load<double>("currentUpgradePrice", 1000000000);
+        currentUpgradePrice = ES3.Load<double>("currentBackPackUpgradePrice", 10000);
         totalItemsValue = ES3.Load<double>("totalItemsValue", 0);
     }
 }
