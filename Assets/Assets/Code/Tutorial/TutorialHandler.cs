@@ -14,6 +14,8 @@ public class TutorialHandler : MonoBehaviour
     
     [SerializeField] private GameObject[] phases;
 
+    [SerializeField] private PlayerHealthHandler playerHealthHandler;//if it is on tutorial do not atack;
+
 
 
     //timer
@@ -75,6 +77,7 @@ public class TutorialHandler : MonoBehaviour
         {
             isFirstTime = false; //if it is the first time, change to false and save, so the next time it wont show
             save();
+            playerHealthHandler.setTutorialIsOn(true); //stop getting damage
         }
         else
         {
@@ -130,6 +133,7 @@ public class TutorialHandler : MonoBehaviour
     private void endTutorial()
     {
         gameObject.SetActive(false);
+        playerHealthHandler.setTutorialIsOn(false); //start getting damage
     }
 
 
@@ -143,4 +147,6 @@ public class TutorialHandler : MonoBehaviour
         isFirstTime = ES3.Load("isFirstTime", true);
     }
 
+
+    
 }

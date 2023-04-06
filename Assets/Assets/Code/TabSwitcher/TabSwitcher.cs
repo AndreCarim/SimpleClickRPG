@@ -7,9 +7,11 @@ public class TabSwitcher : MonoBehaviour
 {
     [SerializeField] private GameObject openBasicMenu;
     [SerializeField] private GameObject openAutoClickMenu;
+    [SerializeField] private GameObject openHealthMenu;
 
     [SerializeField] private GameObject autoClickMenu;
     [SerializeField] private GameObject basicMenu;
+    [SerializeField] private GameObject healthMenu;
 
     private Color clickedColor = new Color(1f, 1f, 1f, .25f);
     private Color notClickedColor = new Color(1f, 1f, 1f, 0f);
@@ -48,6 +50,16 @@ public class TabSwitcher : MonoBehaviour
         }
     }
 
+    public void openHealthMenuClick()
+    {
+        if (!healthMenu.activeInHierarchy)
+        {
+            deactiveAll();
+            healthMenu.SetActive(true);
+            openHealthMenu.GetComponent<Image>().color = clickedColor;
+        }
+    }
+
     private void deactiveAll()
     {
         audioSource.Play();
@@ -55,10 +67,11 @@ public class TabSwitcher : MonoBehaviour
         //so we can open the right one in the function
         autoClickMenu.SetActive(false);
         basicMenu.SetActive(false);
+        healthMenu.SetActive(false);
 
 
 
-
+        openHealthMenu.GetComponent<Image>().color = notClickedColor;
         openBasicMenu.GetComponent<Image>().color = notClickedColor;
         openAutoClickMenu.GetComponent<Image>().color = notClickedColor;
     }

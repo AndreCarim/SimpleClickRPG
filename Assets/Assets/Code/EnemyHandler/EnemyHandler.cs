@@ -9,19 +9,24 @@ using TMPro;
 //it also calls the backpack to give the item dropped
 //reload the new enemy
 //sets the enemy health and dropItemValue
+
+//handles the enemy, stage and 
 public class EnemyHandler : MonoBehaviour
 {
-    private double currentHealth;
-    private double currentMaxHealth; //have to save this
+    private double enemyCurrentHealth;
+    private double enemyCurrentMaxHealth; //have to save this
     private double dropItemValue; //have to save this
     private double behindTheSceneHealth;//incremental number
 
-    private double healAmount;
+    private double enemyDamageToPlayerAmount; //amount of damage the enemy will give to the player
+
+    private double enemyHealAmount;
 
     
 
 
     [SerializeField] private BackPackHandler backPackHandler;
+    [SerializeField] private PlayerHealthHandler playerHealthHandler;
 
     [SerializeField] private TextMeshProUGUI stageText;
     [SerializeField] private TextMeshProUGUI amountKilledText;
@@ -59,8 +64,10 @@ public class EnemyHandler : MonoBehaviour
 
 
     //timer
-    private float currentTime;
+    private float currentTimeHeal;
     private float healEveryXSeconds;
+    private float currentTimeDamage;
+    private float damageEveryXSeconds;
 
 
 
@@ -68,7 +75,9 @@ public class EnemyHandler : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
-        healEveryXSeconds = 2f;
+        healEveryXSeconds = 2f; // heal for the enemy
+        damageEveryXSeconds = 5f;//damage to the player
+        currentTimeDamage = damageEveryXSeconds;
 
         load();
 
@@ -94,33 +103,42 @@ public class EnemyHandler : MonoBehaviour
     void FixedUpdate()
     {
 
-        currentTime -= 1 * Time.deltaTime; // decreasing the amount of seconds inside the currentTime(starts at 1)
-        if (currentTime <= 0)
+        currentTimeHeal -= 1 * Time.deltaTime; // decreasing the amount of seconds inside the currentTime(starts at 1)
+        currentTimeDamage -= 1 * Time.deltaTime;
+
+        if (currentTimeHeal <= 0)//dealing heal
         { //check if the timer is done
 
-            currentTime = healEveryXSeconds; //set the current time back to 30
-            if (currentHealth < currentMaxHealth)
+            currentTimeHeal = healEveryXSeconds;
+            if (enemyCurrentHealth < enemyCurrentMaxHealth)
             {
                 healEnemy();
             }
 
         }
 
+        if(currentTimeDamage <= 0)//dealing the damage
+        {
+            currentTimeDamage = damageEveryXSeconds;
+            dealDemageToPlayer();
+        }
+
     }
 
+    //damage to the enemy
     public void setDamage(double damageAmount){
         
 
-        if(damageAmount >= 1 && currentHealth >= 0){
-            if(currentHealth - damageAmount > 0){
+        if(damageAmount >= 1 && enemyCurrentHealth >= 0){
+            if(enemyCurrentHealth - damageAmount > 0){
                 //enemy keeps alive
-                currentHealth -= damageAmount;
+                enemyCurrentHealth -= damageAmount;
                 
 
                 
 
-            }else if(currentHealth - damageAmount <= 0 ){
-                currentHealth = 0;
+            }else if(enemyCurrentHealth - damageAmount <= 0 ){
+                enemyCurrentHealth = 0;
                 playDiedSound();
                 enemyDied();
             }
@@ -129,6 +147,11 @@ public class EnemyHandler : MonoBehaviour
         healthBarUpdate();
     }
 
+    //damage to the player
+    public void dealDemageToPlayer()
+    {
+        playerHealthHandler.dealDamage(enemyDamageToPlayerAmount);
+    }
     
 
     private void enemyDied(){
@@ -136,7 +159,7 @@ public class EnemyHandler : MonoBehaviour
         backPackHandler.enemyDroppedItem(dropItemValue);
 
         //upgrade the enemy
-        currentHealth = currentMaxHealth;
+        enemyCurrentHealth = enemyCurrentMaxHealth;
         amountKilled += 1;
 
         
@@ -173,23 +196,35 @@ public class EnemyHandler : MonoBehaviour
     private void handleUpgradeStage(){
         //changing back from a boss
         //it always will upgrade after a boss
-        currentMaxHealth = currentMaxHealth / 4;
+        enemyCurrentMaxHealth = enemyCurrentMaxHealth / 4;
         dropItemValue = dropItemValue / 8;
+        enemyDamageToPlayerAmount = enemyDamageToPlayerAmount / 2;
 
-        currentMaxHealth = currentMaxHealth + behindTheSceneHealth; //hp handler
+        enemyCurrentMaxHealth = enemyCurrentMaxHealth + behindTheSceneHealth; //hp handler
         behindTheSceneHealth = behindTheSceneHealth + 550; //550 every 10 kills
-        healAmount = healAmount + 50; // increasing the amount of healing
-        currentHealth = currentMaxHealth;
+        enemyHealAmount = enemyHealAmount + 50; // increasing the amount of healing
+        enemyCurrentHealth = enemyCurrentMaxHealth;
+        enemyDamageToPlayerAmount = enemyDamageToPlayerAmount + 50;//increase the amount of damage to player
         currentStage += 1; //increase stage
         dropItemValue = dropItemValue + 25; // incriese drop values
     }
 
     private void handleBoss()
     {
-        currentMaxHealth = currentMaxHealth * 4;
-        currentHealth = currentMaxHealth;
+        enemyCurrentMaxHealth = enemyCurrentMaxHealth * 4;
+        enemyCurrentHealth = enemyCurrentMaxHealth;
         dropItemValue = dropItemValue * 8;
+        enemyDamageToPlayerAmount = enemyDamageToPlayerAmount * 2;
     }
+
+
+    public void reloadEnemy()
+    {
+        enemyCurrentHealth = enemyCurrentMaxHealth;
+        healthBarUpdate();
+    }
+
+
 
     private void setIconHealthBar()
     {
@@ -206,15 +241,15 @@ public class EnemyHandler : MonoBehaviour
 
     private void healEnemy()
     {
-        if(currentHealth + healAmount <= currentMaxHealth)
+        if(enemyCurrentHealth + enemyHealAmount <= enemyCurrentMaxHealth)
         {
             //if the healAmount is not enough to make the full max health
-            currentHealth = currentHealth + healAmount;
+            enemyCurrentHealth = enemyCurrentHealth + enemyHealAmount;
         }
         else
         {
             //if the healAmount heals all the way to full max health;
-            currentHealth = currentMaxHealth;
+            enemyCurrentHealth = enemyCurrentMaxHealth;
         }
 
        
@@ -239,28 +274,28 @@ public class EnemyHandler : MonoBehaviour
     private void healthBarUpdate(){
         
 
-        if(currentMaxHealth > 1000000000)
+        if(enemyCurrentMaxHealth > 1000000000)
         {
-            healthBarSlider.maxValue = Mathf.RoundToInt((float)currentMaxHealth / 1000000);
-            healthBarSlider.value = Mathf.RoundToInt((float)currentHealth / 1000000);
+            healthBarSlider.maxValue = Mathf.RoundToInt((float)enemyCurrentMaxHealth / 1000000);
+            healthBarSlider.value = Mathf.RoundToInt((float)enemyCurrentHealth / 1000000);
         }
         else
         {
-            healthBarSlider.maxValue = Mathf.RoundToInt((float)currentMaxHealth / 50);
-            healthBarSlider.value = Mathf.RoundToInt((float)currentHealth / 50);
+            healthBarSlider.maxValue = Mathf.RoundToInt((float)enemyCurrentMaxHealth / 50);
+            healthBarSlider.value = Mathf.RoundToInt((float)enemyCurrentHealth / 50);
         }
 
-        if (currentHealth < 1)
+        if (enemyCurrentHealth < 1)
         {
-            healthText.text = NumberAbrev.ParseDouble(1, 0) + "/" + NumberAbrev.ParseDouble(currentMaxHealth, 0);
+            healthText.text = NumberAbrev.ParseDouble(1, 0) + "/" + NumberAbrev.ParseDouble(enemyCurrentMaxHealth, 0);
         }
-        else if(currentHealth > 10000)
+        else if(enemyCurrentHealth > 10000)
         {
-            healthText.text = NumberAbrev.ParseDouble(currentHealth, 2) + "/" + NumberAbrev.ParseDouble(currentMaxHealth, 2);
+            healthText.text = NumberAbrev.ParseDouble(enemyCurrentHealth, 2) + "/" + NumberAbrev.ParseDouble(enemyCurrentMaxHealth, 2);
         }
         else
         {
-            healthText.text = NumberAbrev.ParseDouble(currentHealth, 0) + "/" + NumberAbrev.ParseDouble(currentMaxHealth, 0);
+            healthText.text = NumberAbrev.ParseDouble(enemyCurrentHealth, 0) + "/" + NumberAbrev.ParseDouble(enemyCurrentMaxHealth, 0);
         }
             
     }
@@ -307,32 +342,39 @@ public class EnemyHandler : MonoBehaviour
         enemyKillAnimation.SetTrigger("EnemyKilled");
     }
 
+    private void healAnimation()
+    {
+
+    }
+
     public void save()
     {
         //nao mudar depois de lançar
-        ES3.Save("currentMaxHealth", currentMaxHealth);
+        ES3.Save("enemyCurrentMaxHealth", enemyCurrentMaxHealth);
         ES3.Save("dropItemValue", dropItemValue);
         ES3.Save("amountKilled", amountKilled);
         ES3.Save("currentStage", currentStage);
-        ES3.Save("currentHealth", currentHealth);
+        ES3.Save("enemyCurrentHealth", enemyCurrentHealth);
         ES3.Save("behindTheSceneHealth", behindTheSceneHealth);
         ES3.Save("isBoss", isBoss);
         ES3.Save("currentBackGroundSprite", currentBackGroundSprite);
-        ES3.Save("healAmount", healAmount);
+        ES3.Save("enemyHealAmount", enemyHealAmount);
+        ES3.Save("enemyDamageToPlayerAmount", enemyDamageToPlayerAmount);
     }
 
     private void load()
     {
         //nao mudar os nomes depois de lançar
-        currentMaxHealth = ES3.Load<double>("currentMaxHealth123124533", 1500);
-        dropItemValue = ES3.Load<double>("dropItemValue123123", 100);
-        amountKilled = ES3.Load<double>("amountKilled123123", 0);
-        currentStage = ES3.Load<double>("currentStage123123", 1);
-        currentHealth = ES3.Load<double>("currentHealth234324", currentMaxHealth);
-        behindTheSceneHealth = ES3.Load<double>("behindTheSceneHealth123123", 250);
-        isBoss = ES3.Load<bool>("isBoss123123", false);
-        currentBackGroundSprite = ES3.Load<Sprite>("currentBackGroundSprite123213", backGroundSprites[0]);
-        healAmount = ES3.Load<double>("healAmount123213", 50);
+        enemyCurrentMaxHealth = ES3.Load<double>("enemyCurrentMaxHealth", 1500);
+        dropItemValue = ES3.Load<double>("dropItemValue", 100);
+        amountKilled = ES3.Load<double>("amountKilled", 0);
+        currentStage = ES3.Load<double>("currentStage", 1);
+        enemyCurrentHealth = ES3.Load<double>("enemyCurrentHealth", enemyCurrentMaxHealth);
+        behindTheSceneHealth = ES3.Load<double>("behindTheSceneHealth", 250);
+        isBoss = ES3.Load<bool>("isBoss", false);
+        currentBackGroundSprite = ES3.Load<Sprite>("currentBackGroundSprite", backGroundSprites[0]);
+        enemyHealAmount = ES3.Load<double>("enemyHealAmount", 50);
+        enemyDamageToPlayerAmount = ES3.Load<double>("enemyDamageToPlayerAmount", 50);
     }
 
 

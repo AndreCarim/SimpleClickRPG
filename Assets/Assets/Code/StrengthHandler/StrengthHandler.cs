@@ -164,10 +164,10 @@ public class StrengthHandler : MonoBehaviour
 
     private void load()
     {
-        currentStrengthPower = ES3.Load<double>("currentStrengthPower12321", 50);
-        currentUpgradePrice = ES3.Load<double>("currentStrengthUpgradePrice312321", 20);
-        behindTheScenePrice = ES3.Load<double>("behindTheScenePrice123123", 25);
-        behindTheScenePower = ES3.Load<double>("behindTheScenePower13123", 4);
+        currentStrengthPower = ES3.Load<double>("currentStrengthPower", 50);
+        currentUpgradePrice = ES3.Load<double>("currentStrengthUpgradePrice", 20);
+        behindTheScenePrice = ES3.Load<double>("behindTheScenePrice", 25);
+        behindTheScenePower = ES3.Load<double>("behindTheScenePower", 4);
     }
 
     
