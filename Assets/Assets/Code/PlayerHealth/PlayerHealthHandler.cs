@@ -185,7 +185,7 @@ public class PlayerHealthHandler : MonoBehaviour
             goldHandler.decreaseAmountOfGold(playerHealAmountPrice);
 
             //increase the amount healed
-            playerHealAmount = playerHealAmount + 20;
+            playerHealAmount = playerHealAmount + 40;
 
             //increase the price
             playerHealAmountPrice = playerHealAmountPrice + 1000;
@@ -224,7 +224,7 @@ public class PlayerHealthHandler : MonoBehaviour
             goldHandler.decreaseAmountOfGold(maxHealthPrice);
 
             //increase the max health
-            currentPlayerMaxHealth = currentPlayerMaxHealth + 150;
+            currentPlayerMaxHealth = currentPlayerMaxHealth + 300;
 
             //increase the price
             maxHealthPrice = maxHealthPrice + 1000;
@@ -263,7 +263,10 @@ public class PlayerHealthHandler : MonoBehaviour
 
     private void healthBarUpdate()
     {
-        if (currentPlayerHealth > 1000000000)
+        string tempCurrentPlayerHealth;
+        string tempCurrentPlayerMaxHealth;
+
+        if (currentPlayerHealth > 1000000000)//handles the slider itself
         {
             healthBarSlider.maxValue = Mathf.RoundToInt((float)currentPlayerMaxHealth / 1000000);
             healthBarSlider.value = Mathf.RoundToInt((float)currentPlayerHealth / 1000000);
@@ -274,18 +277,34 @@ public class PlayerHealthHandler : MonoBehaviour
             healthBarSlider.value = Mathf.RoundToInt((float)currentPlayerHealth / 50);
         }
 
-        if (currentPlayerHealth < 1)
+
+
+        if (currentPlayerHealth < 1) //handles the text inside the bar for the current Health
         {
-            healthText.text = NumberAbrev.ParseDouble(1, 0) + "/" + NumberAbrev.ParseDouble(currentPlayerMaxHealth, 0);
+            tempCurrentPlayerHealth = "1";
         }
         else if (currentPlayerHealth > 10000)
         {
-            healthText.text = NumberAbrev.ParseDouble(currentPlayerHealth, 2) + "/" + NumberAbrev.ParseDouble(currentPlayerMaxHealth, 2);
+            tempCurrentPlayerHealth = NumberAbrev.ParseDouble(currentPlayerHealth, 2);
         }
         else
         {
-            healthText.text = NumberAbrev.ParseDouble(currentPlayerHealth, 0) + "/" + NumberAbrev.ParseDouble(currentPlayerMaxHealth, 0);
+            tempCurrentPlayerHealth = NumberAbrev.ParseDouble(currentPlayerHealth, 0);
         }
+
+
+        if (currentPlayerMaxHealth > 10000)//handles the text inside the bar for the max health
+        {
+            tempCurrentPlayerMaxHealth = NumberAbrev.ParseDouble(currentPlayerMaxHealth, 2);
+        }
+        else
+        {
+            tempCurrentPlayerMaxHealth = NumberAbrev.ParseDouble(currentPlayerMaxHealth, 0);
+        }
+
+
+
+        healthText.text = tempCurrentPlayerHealth + "/" + tempCurrentPlayerMaxHealth;
     }
 
     

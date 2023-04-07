@@ -10,7 +10,13 @@ using TMPro;
 //reload the new enemy
 //sets the enemy health and dropItemValue
 
+//it also handles the number of enemys to the next boss
+
 //handles the enemy, stage and 
+
+//level is the current level the player is, not how many enemies he killed
+//stage is the amount of stages passed, every 10 levels it pass one stage
+//the totalEnemyKills is the general amount of kills the player has
 public class EnemyHandler : MonoBehaviour
 {
     private double enemyCurrentHealth;
@@ -29,13 +35,14 @@ public class EnemyHandler : MonoBehaviour
     [SerializeField] private PlayerHealthHandler playerHealthHandler;
 
     [SerializeField] private TextMeshProUGUI stageText;
-    [SerializeField] private TextMeshProUGUI amountKilledText;
+    [SerializeField] private TextMeshProUGUI totalAmountKilledText;
 
     [SerializeField] private Animator enemyKillAnimation;
     [SerializeField] private SpriteRenderer enemyKillSpriteRenderer;
 
 
-    private double amountKilled; // have to save this
+    private double totalAmountKilled; // have to save this
+    private double currentEnemyLevel; //this is to see the level
     private double currentStage; // have to save this
     
 
@@ -43,6 +50,15 @@ public class EnemyHandler : MonoBehaviour
     [SerializeField] private AudioClip diedSound;
     [SerializeField] private AudioClip inventoryFullSound;
 
+
+    //how many enemies left until the boss
+    [SerializeField] private TextMeshProUGUI howManyEnemiesLeftUntilTheBossText;
+    [SerializeField] private GameObject howManyEnemiesLeft;
+    [SerializeField] private GameObject bossButton;
+    [SerializeField] private GameObject bossText;
+    
+
+    //enemy health bar
     [SerializeField] private Slider healthBarSlider;
     [SerializeField] private TextMeshProUGUI healthText;
     
@@ -60,7 +76,11 @@ public class EnemyHandler : MonoBehaviour
     [SerializeField] Sprite[] enemySprites;
     [SerializeField] Sprite[] backGroundSprites;
     private Sprite currentBackGroundSprite;
+    [SerializeField] private AudioSource bossLaughAudio;
+    [SerializeField] private AudioSource bossKillAudio;
+    [SerializeField] private AudioSource bossBackGroundMusic;
 
+    [SerializeField] private BossGlowAnimation bossGlowAnimation;
 
 
     //timer
@@ -68,6 +88,9 @@ public class EnemyHandler : MonoBehaviour
     private float healEveryXSeconds;
     private float currentTimeDamage;
     private float damageEveryXSeconds;
+
+
+    
 
 
 
@@ -79,10 +102,12 @@ public class EnemyHandler : MonoBehaviour
         damageEveryXSeconds = 5f;//damage to the player
         currentTimeDamage = damageEveryXSeconds;
 
-        load();
+        load();//loads the saves
 
-       
+        
 
+        
+        
         setIconHealthBar();
         changeSprite();
         healthBarUpdate();
@@ -160,25 +185,38 @@ public class EnemyHandler : MonoBehaviour
 
         //upgrade the enemy
         enemyCurrentHealth = enemyCurrentMaxHealth;
-        amountKilled += 1;
+        
+        totalAmountKilled += 1;
+        if(currentEnemyLevel % 10 == 8) { currentEnemyLevel++; } //this is adding one to the current so we can check in the conditionals that follows, otherwise it will go directly to the else statement.
+
+        //reload the hp for the player
+        playerHealthHandler.reloadPlayer();
 
         
 
-        if (amountKilled % 10 == 0){
-            //stage is multiple of 10
-            isBoss = false; //its not on a boss anymore
+        if (isBoss){//right after killed a boss
+            //will handle whatever comes after a boss
+
             handleUpgradeStage(); //change sprite for the enemy
             changeSprite(); //from enemy and enemy killed
+            setHowManyEnemiesLeftUntilBoss();//will set the amount of enemies left until the boss
+            bossAnimationsFinish();
         }
-        else if(amountKilled % 10 == 9)//every 9 stages there will be a boss;
+        else if(currentEnemyLevel % 10 == 9)//this will open the boss button, it will happen every level before a boss
         {
-            isBoss = true;
-            handleBoss();
-        }else
+            //while the player not kills the boss, this will keep showing
+            //it will not count to the currentEnemy because it can be played more than once
+            isBoss = false;
+            setBossButton();
+        }
+        else//its not a lvl before the boss and not right after the boss
         {
             isBoss = false;
+            currentEnemyLevel += 1;
+            setHowManyEnemiesLeftUntilBoss();//will set the amount of enemies left until the boss
         }
 
+        
         setIconHealthBar();
         setTexts();
         changeColor(); //from the enemy and enemy killed
@@ -194,9 +232,13 @@ public class EnemyHandler : MonoBehaviour
     incremento de drop = 8x 
      */
     private void handleUpgradeStage(){
-        //changing back from a boss
+        //upgrade the enemy after a boss
         //it always will upgrade after a boss
-        enemyCurrentMaxHealth = enemyCurrentMaxHealth / 4;
+
+        isBoss = false;
+
+        //if you change here, need to change inside the goBackOneLevel()
+        enemyCurrentMaxHealth = enemyCurrentMaxHealth / 5;
         dropItemValue = dropItemValue / 8;
         enemyDamageToPlayerAmount = enemyDamageToPlayerAmount / 2;
 
@@ -206,25 +248,92 @@ public class EnemyHandler : MonoBehaviour
         enemyCurrentHealth = enemyCurrentMaxHealth;
         enemyDamageToPlayerAmount = enemyDamageToPlayerAmount + 50;//increase the amount of damage to player
         currentStage += 1; //increase stage
-        dropItemValue = dropItemValue + 25; // incriese drop values
+        dropItemValue = dropItemValue + 50; // incriese drop values
+
+        currentEnemyLevel += 1;
+
+        bossKillAudio.Play();
     }
 
-    private void handleBoss()
+    private void handleBoss()//handles the boss upgrades
     {
-        enemyCurrentMaxHealth = enemyCurrentMaxHealth * 4;
+        enemyCurrentMaxHealth = enemyCurrentMaxHealth * 5;
         enemyCurrentHealth = enemyCurrentMaxHealth;
         dropItemValue = dropItemValue * 8;
         enemyDamageToPlayerAmount = enemyDamageToPlayerAmount * 2;
     }
 
+    public void clickBossButton()//handles to enter in boss mode
+    {
+        if (!isBoss)
+        {
+            handleBoss();
 
-    public void reloadEnemy()
+            isBoss = true;
+            playerHealthHandler.reloadPlayer(); //healing the player
+
+            setIconHealthBar();
+            setTexts();
+            changeColor();
+            healthBarUpdate();
+
+            bossAnimationsStart(); //play sound and animations
+
+        }
+        
+    }
+
+
+    private void setBossButton() //activate the boss button
+    {
+        bossButton.SetActive(true);
+        howManyEnemiesLeft.SetActive(false);
+        bossText.SetActive(false);
+    }
+
+    
+
+    private void setHowManyEnemiesLeftUntilBoss() //activate the how many enemies text
+    {
+        //this will handle if its gonna show the button or the number
+        bossButton.SetActive(false); // sets the boss button to not active
+        howManyEnemiesLeft.SetActive(true);//sets the how many active
+        bossText.SetActive(false);
+
+        howManyEnemiesLeftUntilTheBossText.text = NumberAbrev.ParseDouble(9 - (currentEnemyLevel % 10));// number of enemies per stage without the boss - the rest of the currentLevel
+    }
+
+    //reaload the enemy when the player died for a boss enemy
+    public void reloadFromBoss()
+    {
+        if (isBoss) //if the player is really in a boss
+        {
+            isBoss = false;
+
+            enemyCurrentMaxHealth = enemyCurrentMaxHealth / 5;
+            dropItemValue = dropItemValue / 8;
+            enemyDamageToPlayerAmount = enemyDamageToPlayerAmount / 2;
+            enemyCurrentHealth = enemyCurrentMaxHealth;
+
+
+            bossAnimationsFinish();
+
+            setBossButton();
+            setIconHealthBar();
+            setTexts();
+            changeColor();
+            healthBarUpdate();
+        }
+    }
+   
+    //reaload the enemy when the player died for a normal enemy
+    public void reloadFromNormalEnemy()
     {
         enemyCurrentHealth = enemyCurrentMaxHealth;
         healthBarUpdate();
     }
 
-
+    
 
     private void setIconHealthBar()
     {
@@ -272,9 +381,12 @@ public class EnemyHandler : MonoBehaviour
     }
 
     private void healthBarUpdate(){
+
+        string tempCurrentHealth;
+        string tempMaxHealth;
         
 
-        if(enemyCurrentMaxHealth > 1000000000)
+        if(enemyCurrentMaxHealth > 1000000000)//handles the health bar it self
         {
             healthBarSlider.maxValue = Mathf.RoundToInt((float)enemyCurrentMaxHealth / 1000000);
             healthBarSlider.value = Mathf.RoundToInt((float)enemyCurrentHealth / 1000000);
@@ -285,19 +397,33 @@ public class EnemyHandler : MonoBehaviour
             healthBarSlider.value = Mathf.RoundToInt((float)enemyCurrentHealth / 50);
         }
 
-        if (enemyCurrentHealth < 1)
+        if (enemyCurrentHealth < 1) //handles the text inside the bar for the current Health
         {
-            healthText.text = NumberAbrev.ParseDouble(1, 0) + "/" + NumberAbrev.ParseDouble(enemyCurrentMaxHealth, 0);
+            tempCurrentHealth = "1";
         }
         else if(enemyCurrentHealth > 10000)
         {
-            healthText.text = NumberAbrev.ParseDouble(enemyCurrentHealth, 2) + "/" + NumberAbrev.ParseDouble(enemyCurrentMaxHealth, 2);
+            tempCurrentHealth = NumberAbrev.ParseDouble(enemyCurrentHealth, 2);
         }
         else
         {
-            healthText.text = NumberAbrev.ParseDouble(enemyCurrentHealth, 0) + "/" + NumberAbrev.ParseDouble(enemyCurrentMaxHealth, 0);
+            tempCurrentHealth = NumberAbrev.ParseDouble(enemyCurrentHealth, 0);
         }
-            
+
+
+        if (enemyCurrentMaxHealth > 10000)//handles the text inside the bar for the max health
+        {
+            tempMaxHealth = NumberAbrev.ParseDouble(enemyCurrentMaxHealth, 2);
+        }
+        else
+        {
+            tempMaxHealth = NumberAbrev.ParseDouble(enemyCurrentMaxHealth, 0);
+        }
+
+
+
+        healthText.text = tempCurrentHealth + "/" + tempMaxHealth;
+
     }
 
     private void changeSprite(){
@@ -312,13 +438,13 @@ public class EnemyHandler : MonoBehaviour
         }
         
         //checking if is multiple of 50 so it can change the backGround
-        if(amountKilled % 50 == 0 && amountKilled != 0)
+        if(currentStage % 50 == 0 && currentStage != 0)
         {
            
             //if the current stage is not bigger than the amount of sprites
-            if((int)amountKilled / 50 <= backGroundSprites.Length - 1)
+            if((int)currentStage / 50 <= backGroundSprites.Length - 1)
             {
-                currentBackGroundSprite = backGroundSprites[(int)amountKilled / 50];
+                currentBackGroundSprite = backGroundSprites[(int)currentStage / 50];
             }
             else
             {
@@ -331,9 +457,27 @@ public class EnemyHandler : MonoBehaviour
 
     }
 
+    private void bossAnimationsStart()
+    {
+        bossButton.SetActive(false);
+        howManyEnemiesLeft.SetActive(false);
+        bossText.SetActive(true);
+
+        bossLaughAudio.Play();//starts the laugh
+        bossBackGroundMusic.Play();//starts the background music
+        bossGlowAnimation.setIsBossActive(true);//starts the glowing
+    }
+
+    public void bossAnimationsFinish()
+    {
+        bossBackGroundMusic.Stop();//stops the backGround music
+        
+        bossGlowAnimation.setIsBossActive(false);//stops the glowing
+    }
+
     private void setTexts(){
         stageText.text = NumberAbrev.ParseDouble(currentStage);
-        amountKilledText.text = NumberAbrev.ParseDouble(amountKilled);
+        totalAmountKilledText.text = NumberAbrev.ParseDouble(totalAmountKilled);
     }
 
     private void killAnimationHandler()
@@ -342,9 +486,9 @@ public class EnemyHandler : MonoBehaviour
         enemyKillAnimation.SetTrigger("EnemyKilled");
     }
 
-    private void healAnimation()
+    public bool getIsBoss()
     {
-
+        return isBoss;
     }
 
     public void save()
@@ -352,7 +496,7 @@ public class EnemyHandler : MonoBehaviour
         //nao mudar depois de lançar
         ES3.Save("enemyCurrentMaxHealth", enemyCurrentMaxHealth);
         ES3.Save("dropItemValue", dropItemValue);
-        ES3.Save("amountKilled", amountKilled);
+        ES3.Save("currentEnemyLevel", currentEnemyLevel);
         ES3.Save("currentStage", currentStage);
         ES3.Save("enemyCurrentHealth", enemyCurrentHealth);
         ES3.Save("behindTheSceneHealth", behindTheSceneHealth);
@@ -360,6 +504,7 @@ public class EnemyHandler : MonoBehaviour
         ES3.Save("currentBackGroundSprite", currentBackGroundSprite);
         ES3.Save("enemyHealAmount", enemyHealAmount);
         ES3.Save("enemyDamageToPlayerAmount", enemyDamageToPlayerAmount);
+        ES3.Save("totalAmountKilled", totalAmountKilled);
     }
 
     private void load()
@@ -367,7 +512,7 @@ public class EnemyHandler : MonoBehaviour
         //nao mudar os nomes depois de lançar
         enemyCurrentMaxHealth = ES3.Load<double>("enemyCurrentMaxHealth", 1500);
         dropItemValue = ES3.Load<double>("dropItemValue", 100);
-        amountKilled = ES3.Load<double>("amountKilled", 0);
+        currentEnemyLevel = ES3.Load<double>("currentEnemyLevel", 0);
         currentStage = ES3.Load<double>("currentStage", 1);
         enemyCurrentHealth = ES3.Load<double>("enemyCurrentHealth", enemyCurrentMaxHealth);
         behindTheSceneHealth = ES3.Load<double>("behindTheSceneHealth", 250);
@@ -375,6 +520,21 @@ public class EnemyHandler : MonoBehaviour
         currentBackGroundSprite = ES3.Load<Sprite>("currentBackGroundSprite", backGroundSprites[0]);
         enemyHealAmount = ES3.Load<double>("enemyHealAmount", 50);
         enemyDamageToPlayerAmount = ES3.Load<double>("enemyDamageToPlayerAmount", 50);
+        totalAmountKilled = ES3.Load<double>("totalAmountKilled", 0);
+
+        //handles the enemy load to check if it is a boss, a regular enemy or a enemy before the boss (so it needs to show the boss button)
+        if (isBoss)
+        {
+            bossAnimationsStart();
+        }
+        else if (currentEnemyLevel % 10 == 9)//this will open the boss button, it will happen every level before a boss
+        {
+            setBossButton();
+        }
+        else//its not a lvl before the boss and not right after the boss
+        { 
+            setHowManyEnemiesLeftUntilBoss();//will set the amount of enemies left until the boss
+        }
     }
 
 

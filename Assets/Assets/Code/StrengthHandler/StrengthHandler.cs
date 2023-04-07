@@ -7,7 +7,7 @@ using TMPro;
 public class StrengthHandler : MonoBehaviour
 {
 
-    private double currentStrengthPower;//current power
+    [SerializeField]private double currentStrengthPower;//current power
     private double behindTheScenePower;//current behind the scene power
 
     private double currentUpgradePrice; // the visible price

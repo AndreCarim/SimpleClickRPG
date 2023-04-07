@@ -37,8 +37,13 @@ public class GoldHandler : MonoBehaviour
     }
 
     public void decreaseAmountOfGold(double value){
+
+
         //this will be used by upgrades like backpack and strength
+       
         currentAmountOfGold = currentAmountOfGold - value;
+       
+
         setGoldAmountText();
     }
 
