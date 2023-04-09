@@ -9,7 +9,8 @@ public class GoldHandler : MonoBehaviour
     
     [SerializeField] private double currentAmountOfGold;
 
-    
+    //handles the pause menu
+    private double totalAmountOfGoldEver;
 
 
     // Start is called before the first frame update
@@ -33,6 +34,9 @@ public class GoldHandler : MonoBehaviour
     public void increaseAmountOfGold(double value){
         //this will be used by the sell button for example
         currentAmountOfGold = currentAmountOfGold + value;
+
+        totalAmountOfGoldEver += value;//pause menu
+
         setGoldAmountText();
     }
 
@@ -65,15 +69,21 @@ public class GoldHandler : MonoBehaviour
         return currentAmountOfGold;
     }
 
+    public string getTotalAmountOfGoldEver()
+    {
+        return NumberAbrev.ParseDouble(totalAmountOfGoldEver);
+    }
+
     public void save()
     {
         ES3.Save("currentAmountOfGold", currentAmountOfGold);
-        
+        ES3.Save("totalAmountOfGoldEver", totalAmountOfGoldEver);
     }
 
     private void load()
     {
-        currentAmountOfGold = ES3.Load<double>("currentAmountOfGold", 0); 
+        currentAmountOfGold = ES3.Load<double>("currentAmountOfGold", 0);
+        totalAmountOfGoldEver = ES3.Load<double>("totalAmountOfGoldEver", 0);
     }
 
 }

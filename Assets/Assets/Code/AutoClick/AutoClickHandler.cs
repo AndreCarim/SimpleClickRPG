@@ -224,7 +224,7 @@ public class AutoClickHandler : MonoBehaviour
     }
 
 
-    private void save()
+    public void save()
     {
         ES3.Save("autoClickStrength", autoClickStrength);
         ES3.Save("autoClickEveryXSeconds", autoClickEveryXSeconds);

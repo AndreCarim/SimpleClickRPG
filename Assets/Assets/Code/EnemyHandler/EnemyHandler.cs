@@ -28,6 +28,11 @@ public class EnemyHandler : MonoBehaviour
 
     private double enemyHealAmount;
 
+
+    //handling the pause menu
+    private double totalDamageGivenEver;
+
+
     
 
 
@@ -89,6 +94,10 @@ public class EnemyHandler : MonoBehaviour
     private float currentTimeDamage;
     private float damageEveryXSeconds;
 
+    //timer for the boss;
+    private float currentTimeColor;
+    private float changeColorEveryXSeconds;
+
 
     
 
@@ -101,6 +110,7 @@ public class EnemyHandler : MonoBehaviour
         healEveryXSeconds = 2f; // heal for the enemy
         damageEveryXSeconds = 5f;//damage to the player
         currentTimeDamage = damageEveryXSeconds;
+        changeColorEveryXSeconds = 1.5f; //setting the boss to change color every .5 seconds
 
         load();//loads the saves
 
@@ -124,12 +134,14 @@ public class EnemyHandler : MonoBehaviour
 
 
 
-    //TIMER for the enemy healing
+    //TIMER for the enemy healing and damage
     void FixedUpdate()
     {
 
         currentTimeHeal -= 1 * Time.deltaTime; // decreasing the amount of seconds inside the currentTime(starts at 1)
         currentTimeDamage -= 1 * Time.deltaTime;
+
+        currentTimeColor -= 1 * Time.deltaTime;
 
         if (currentTimeHeal <= 0)//dealing heal
         { //check if the timer is done
@@ -148,13 +160,21 @@ public class EnemyHandler : MonoBehaviour
             dealDemageToPlayer();
         }
 
+        //handles the boss changing color every .5 seconds
+        if(isBoss == true && currentTimeColor <= 0)
+        {
+            changeColor();
+            currentTimeColor = changeColorEveryXSeconds;
+        }
+
     }
 
     //damage to the enemy
     public void setDamage(double damageAmount){
-        
 
-        if(damageAmount >= 1 && enemyCurrentHealth >= 0){
+        totalDamageGivenEver += damageAmount; //sum the total damage given ever so it can be showed on the pause
+
+        if (damageAmount >= 1 && enemyCurrentHealth >= 0){
             if(enemyCurrentHealth - damageAmount > 0){
                 //enemy keeps alive
                 enemyCurrentHealth -= damageAmount;
@@ -185,7 +205,8 @@ public class EnemyHandler : MonoBehaviour
 
         //upgrade the enemy
         enemyCurrentHealth = enemyCurrentMaxHealth;
-        
+        currentTimeDamage = 5f;//this will set the time to atack back to 5 seconds
+
         totalAmountKilled += 1;
         if(currentEnemyLevel % 10 == 8) { currentEnemyLevel++; } //this is adding one to the current so we can check in the conditionals that follows, otherwise it will go directly to the else statement.
 
@@ -271,6 +292,8 @@ public class EnemyHandler : MonoBehaviour
 
             isBoss = true;
             playerHealthHandler.reloadPlayer(); //healing the player
+
+            currentTimeColor = changeColorEveryXSeconds; //just setting the amount of time for the boss to change color
 
             setIconHealthBar();
             setTexts();
@@ -491,6 +514,21 @@ public class EnemyHandler : MonoBehaviour
         return isBoss;
     }
 
+    public string getTotalDamageGivenEver()
+    {
+        return NumberAbrev.ParseDouble(totalDamageGivenEver);
+    }
+
+    public string getTotalAmountKilled()
+    {
+        return NumberAbrev.ParseDouble(totalAmountKilled);
+    }
+
+    public string getCurrentStage()
+    {
+        return NumberAbrev.ParseDouble(currentStage);
+    }
+
     public void save()
     {
         //nao mudar depois de lançar
@@ -505,6 +543,7 @@ public class EnemyHandler : MonoBehaviour
         ES3.Save("enemyHealAmount", enemyHealAmount);
         ES3.Save("enemyDamageToPlayerAmount", enemyDamageToPlayerAmount);
         ES3.Save("totalAmountKilled", totalAmountKilled);
+        ES3.Save("totalDamageGivenEver", totalDamageGivenEver);
     }
 
     private void load()
@@ -521,6 +560,7 @@ public class EnemyHandler : MonoBehaviour
         enemyHealAmount = ES3.Load<double>("enemyHealAmount", 50);
         enemyDamageToPlayerAmount = ES3.Load<double>("enemyDamageToPlayerAmount", 50);
         totalAmountKilled = ES3.Load<double>("totalAmountKilled", 0);
+        totalDamageGivenEver = ES3.Load<double>("totalDamageGivenEver", 0);
 
         //handles the enemy load to check if it is a boss, a regular enemy or a enemy before the boss (so it needs to show the boss button)
         if (isBoss)

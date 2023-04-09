@@ -21,6 +21,8 @@ public class BackPackHandler : MonoBehaviour
     [SerializeField]private TextMeshProUGUI upgradePriceText;
     [SerializeField]private TextMeshProUGUI currentAmountGoldBackpack;
 
+    [SerializeField] private GameObject noMoreSpaceIcon;
+
     private bool isAdActive = false;
 
 
@@ -31,6 +33,8 @@ public class BackPackHandler : MonoBehaviour
 
         load();
 
+
+        checkNoMoreSpaceIcon();
         setText();
     }
 
@@ -87,11 +91,11 @@ public class BackPackHandler : MonoBehaviour
             totalItemsValue += value;
             
             setText();
+            checkNoMoreSpaceIcon();
 
-            
-        }else if(currentBackPack == currentBackPackMaxSize || currentBackPack > currentBackPackMaxSize){
-            //backPack is full
+
         }
+        
     }
 
 
@@ -107,6 +111,7 @@ public class BackPackHandler : MonoBehaviour
         currentBackPack = 0;
         totalItemsValue = 0;
 
+        checkNoMoreSpaceIcon();
         setText();
     }
 
@@ -166,6 +171,22 @@ public class BackPackHandler : MonoBehaviour
         currentBackPackMaxSize = currentBackPackMaxSize / 2;
         isAdActive = false;
         setText();
+    }
+
+
+    private void checkNoMoreSpaceIcon()
+    {
+        //this will handle the animation of no more space left in the back pack
+
+        if(currentBackPack < currentBackPackMaxSize)
+        {
+            //there are still space left
+            noMoreSpaceIcon.SetActive(false);
+        }
+        else
+        {
+            noMoreSpaceIcon.SetActive(true);
+        }
     }
 
     public void save()

@@ -16,7 +16,13 @@ public class DeadMenuHandler : MonoBehaviour
     [SerializeField] private PlayerHealthHandler playerHealthHandler;
     [SerializeField] private EnemyHandler enemyHandler;
 
+    [SerializeField] private AutoSaveHandler autoSaveHandler;
+
     [SerializeField] private TextMeshProUGUI timesPlayerDiedText;
+
+    [SerializeField] private AudioSource generalAudio;
+
+    
 
 
     public void playerDied()
@@ -36,19 +42,6 @@ public class DeadMenuHandler : MonoBehaviour
         //setting the amount of deaths the player have
         timesPlayerDiedText.text = playerHealthHandler.getTimesPlayerDied();
 
-        
-
-        //this is so it will save the game when it pause
-        //with both player and enemy health back on full
-        //so the player cant come in and come out
-        
-
-        pauseGame();
-    }
-    
-    //this will activate once the player clicks on the reload button
-    public void reloadWorld()
-    {
 
         if (enemyHandler.getIsBoss())//checking who killed the player
         {
@@ -60,6 +53,23 @@ public class DeadMenuHandler : MonoBehaviour
             //it was not a boss
             diedForNormalEnemy();
         }
+
+        //this is so it will save the game when it pause
+        //with both player and enemy health back on full
+        //so the player cant come in and come out
+        autoSaveHandler.save();//saving the whole game
+        generalAudio.Pause();
+        pauseGame();
+    }
+    
+    //this will activate once the player clicks on the reload button
+    public void reloadWorld()
+    {
+        
+
+        
+
+        generalAudio.Play();
         resumeGame();
 
         gameObject.SetActive(false);

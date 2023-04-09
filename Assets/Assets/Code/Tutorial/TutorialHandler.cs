@@ -137,7 +137,7 @@ public class TutorialHandler : MonoBehaviour
     }
 
 
-    private void save()
+    public void save()
     {
         ES3.Save("isFirstTime", isFirstTime);
     }

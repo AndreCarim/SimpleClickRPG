@@ -96,6 +96,12 @@ public class StrengthHandler : MonoBehaviour
         return currentStrengthPower;
     }
 
+    public string getStrengthPowerText()
+    {
+        //for the pause menu
+        return NumberAbrev.ParseDouble(currentStrengthPower);
+    }
+
     private void setStrengthPower(double newStrength){
         currentStrengthPower = newStrength;
     }

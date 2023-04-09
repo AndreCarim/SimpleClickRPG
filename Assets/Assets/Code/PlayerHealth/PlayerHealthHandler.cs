@@ -26,7 +26,8 @@ public class PlayerHealthHandler : MonoBehaviour
 
     private bool isTutorialOn;
 
-   
+    //handles the pause menu
+    private double totalHealthLostEver;
 
     [SerializeField] private Transform healthBarTransform;
 
@@ -108,6 +109,7 @@ public class PlayerHealthHandler : MonoBehaviour
     {
         //if tutorial is on, we dont want to recieve damage
         if(isTutorialOn == false) {
+            totalHealthLostEver += amount; //pause menu
 
             if (currentPlayerHealth - amount > 0)
             {
@@ -142,7 +144,7 @@ public class PlayerHealthHandler : MonoBehaviour
     private void healPlayer()
     {
         //if tutorial is on, we dont want to recieve healing
-        if (isTutorialOn == false) {
+        if (isTutorialOn == false && playerHealAmount > 0) {
             if (playerHealAmount + currentPlayerHealth <= currentPlayerMaxHealth)
             {
                 //there still room to heal
@@ -333,13 +335,19 @@ public class PlayerHealthHandler : MonoBehaviour
         return timesPlayerDied.ToString();
     }
 
+    public string getTotalHealthLostEver()
+    {
+        return NumberAbrev.ParseDouble(totalHealthLostEver);
+    }
 
 
 
 
-    
 
-    private void save()
+
+
+
+    public void save()
     {
         ES3.Save("currentPlayerMaxHealth", currentPlayerMaxHealth);
         ES3.Save("currentPlayerHealth", currentPlayerHealth);
@@ -349,6 +357,7 @@ public class PlayerHealthHandler : MonoBehaviour
         ES3.Save("playerHealAmountPrice", playerHealAmountPrice);
         ES3.Save("healPlayerEveryXSecondsPrice", healPlayerEveryXSecondsPrice);
         ES3.Save("maxHealthPrice", maxHealthPrice);
+        ES3.Save("totalHealthLostEver", totalHealthLostEver);
     }
 
     private void load()
@@ -361,5 +370,6 @@ public class PlayerHealthHandler : MonoBehaviour
         healPlayerEveryXSecondsPrice = ES3.Load<double>("healPlayerEveryXSecondsPrice", 5000);
         playerHealAmountPrice = ES3.Load<double>("playerHealAmountPrice", 500);
         maxHealthPrice = ES3.Load<double>("maxHealthPrice", 1000);
+        totalHealthLostEver = ES3.Load<double>("totalHealthLostEver", 0);
     }
 }
