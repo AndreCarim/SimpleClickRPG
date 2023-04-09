@@ -28,8 +28,19 @@ public class BackPackHandler : MonoBehaviour
 
     [SerializeField] private AudioSource audioSource;
 
+    //makes life easier
+    private double upgradeBackPackPriceAmount;
+    //makes life easier
+
+
     void Start(){
-        
+        //makes life easier
+        upgradeBackPackPriceAmount = 10; //amount of times the price will increase after a upgrade
+        //makes life easier
+
+
+
+
 
         load();
 
@@ -69,7 +80,7 @@ public class BackPackHandler : MonoBehaviour
         goldHandler.decreaseAmountOfGold(currentUpgradePrice);
 
        
-        currentUpgradePrice = currentUpgradePrice   * 10;//upgrade the current price of an upgrade
+        currentUpgradePrice = currentUpgradePrice   * upgradeBackPackPriceAmount;//upgrade the current price of an upgrade
         
         
 

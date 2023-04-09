@@ -37,12 +37,28 @@ public class AutoClickHandler : MonoBehaviour
     [SerializeField] private AudioSource switchAudioSource;
     [SerializeField] private TextMeshProUGUI currentAmountOfAutoClickStrengthText;
 
-    
-
-
+    //makes life easier
+    private double upgradeStrengthAmount;
+    private double upgradeStrengthPriceAmount;
+    private float upgradeTimeSpeedAmount;
+    private double upgradeTimePriceAmount;
+    //makes life easier
 
     void Start()
     {
+        //makes life easier
+        upgradeStrengthAmount = 250; //the amount of strength every upgrade will give to the friend
+        upgradeStrengthPriceAmount = 2000; // the price it will go up every upgrade (sum)
+        upgradeTimeSpeedAmount = 0.1f; //the amount of time that it will decrease by upgrade
+        upgradeTimePriceAmount = 5; //the price it will increase every upgrade (multiplying)
+        //makes life easier
+
+
+
+
+
+
+
         load();
         setText();
         setSwitchImage();
@@ -91,12 +107,12 @@ public class AutoClickHandler : MonoBehaviour
             }
             else
             {
-                autoClickStrength = autoClickStrength * 4;
+                autoClickStrength += upgradeStrengthAmount;
             }
 
 
             //handle the new price for the upgrade
-            autoClickStrengthPrice = autoClickStrengthPrice * 10;
+            autoClickStrengthPrice += upgradeStrengthPriceAmount;
 
             playSoundStrength();
             setText();
@@ -116,10 +132,10 @@ public class AutoClickHandler : MonoBehaviour
             {
                 goldHandler.decreaseAmountOfGold(autoClickTimePrice); //decrease the amount of gold
 
-                autoClickEveryXSeconds = autoClickEveryXSeconds - 0.1f; //decrease the total amount of seconds to wait by 0.1 seconds (one tenth of a second)
+                autoClickEveryXSeconds = autoClickEveryXSeconds - upgradeTimeSpeedAmount; //decrease the total amount of seconds to wait by 0.1 seconds (one tenth of a second)
 
 
-                autoClickTimePrice = autoClickTimePrice * 11; // price will increase by 1000x every upgrade
+                autoClickTimePrice = autoClickTimePrice * upgradeTimePriceAmount; // price will increase by 1000x every upgrade
                 playSoundTime();
                 setText();
             }

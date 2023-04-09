@@ -25,6 +25,9 @@ public class DeadMenuHandler : MonoBehaviour
     
 
 
+
+
+
     public void playerDied()
     {
         //show how many gold handler

@@ -98,8 +98,10 @@ public class EnemyHandler : MonoBehaviour
     private float currentTimeColor;
     private float changeColorEveryXSeconds;
 
+    //Makes Life Easier
 
-    
+    //Makes Life Easier
+
 
 
 
@@ -283,6 +285,9 @@ public class EnemyHandler : MonoBehaviour
         dropItemValue = dropItemValue * 8;
         enemyDamageToPlayerAmount = enemyDamageToPlayerAmount * 2;
     }
+
+
+    
 
     public void clickBossButton()//handles to enter in boss mode
     {
