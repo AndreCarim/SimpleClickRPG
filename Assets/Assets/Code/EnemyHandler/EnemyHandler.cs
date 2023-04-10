@@ -275,7 +275,7 @@ public class EnemyHandler : MonoBehaviour
 
         currentEnemyLevel += 1;
 
-        bossKillAudio.Play();
+        bossKillAudio.Play();//play the audio
     }
 
     private void handleBoss()//handles the boss upgrades
@@ -563,7 +563,7 @@ public class EnemyHandler : MonoBehaviour
         isBoss = ES3.Load<bool>("isBoss", false);
         currentBackGroundSprite = ES3.Load<Sprite>("currentBackGroundSprite", backGroundSprites[0]);
         enemyHealAmount = ES3.Load<double>("enemyHealAmount", 50);
-        enemyDamageToPlayerAmount = ES3.Load<double>("enemyDamageToPlayerAmount", 50);
+        enemyDamageToPlayerAmount = ES3.Load<double>("enemyDamageToPlayerAmount", 50);//50
         totalAmountKilled = ES3.Load<double>("totalAmountKilled", 0);
         totalDamageGivenEver = ES3.Load<double>("totalDamageGivenEver", 0);
 
