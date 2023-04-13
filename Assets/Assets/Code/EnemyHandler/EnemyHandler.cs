@@ -22,6 +22,7 @@ public class EnemyHandler : MonoBehaviour
     private double enemyCurrentHealth;
     private double enemyCurrentMaxHealth; //have to save this
     private double dropItemValue; //have to save this
+    private double dropGemValue; //quantity of gems that the player will get when he kills a boss
     private double behindTheSceneHealth;//incremental number
 
     private double enemyDamageToPlayerAmount; //amount of damage the enemy will give to the player
@@ -38,6 +39,8 @@ public class EnemyHandler : MonoBehaviour
 
     [SerializeField] private BackPackHandler backPackHandler;
     [SerializeField] private PlayerHealthHandler playerHealthHandler;
+    [SerializeField] private GemHandler gemHandler;
+    [SerializeField] private PetsHandler petsHandler;
 
     [SerializeField] private TextMeshProUGUI stageText;
     [SerializeField] private TextMeshProUGUI totalAmountKilledText;
@@ -86,6 +89,8 @@ public class EnemyHandler : MonoBehaviour
     [SerializeField] private AudioSource bossBackGroundMusic;
 
     [SerializeField] private BossGlowAnimation bossGlowAnimation;
+
+    
 
 
     //timer
@@ -203,14 +208,19 @@ public class EnemyHandler : MonoBehaviour
 
     private void enemyDied(){
         killAnimationHandler();//needs to be first because it will get the information such as change sprite and change color of the enemy killed
-        backPackHandler.enemyDroppedItem(dropItemValue);
+        backPackHandler.enemyDroppedItem(dropItemValue); //add the gold to the bag
+
+        
 
         //upgrade the enemy
         enemyCurrentHealth = enemyCurrentMaxHealth;
         currentTimeDamage = 5f;//this will set the time to atack back to 5 seconds
 
         totalAmountKilled += 1;
-        if(currentEnemyLevel % 10 == 8) { currentEnemyLevel++; } //this is adding one to the current so we can check in the conditionals that follows, otherwise it will go directly to the else statement.
+        petsHandler.checkIfEncounterAPet(totalAmountKilled);
+
+
+        if (currentEnemyLevel % 10 == 8) { currentEnemyLevel++; } //this is adding one to the current so we can check in the conditionals that follows, otherwise it will go directly to the else statement.
 
         //reload the hp for the player
         playerHealthHandler.reloadPlayer();
@@ -219,6 +229,9 @@ public class EnemyHandler : MonoBehaviour
 
         if (isBoss){//right after killed a boss
             //will handle whatever comes after a boss
+
+            //first, give the player some gems.
+            gemHandler.increaseAmountOfGem(UnityEngine.Random.Range(10, 20));
 
             handleUpgradeStage(); //change sprite for the enemy
             changeSprite(); //from enemy and enemy killed
@@ -257,6 +270,8 @@ public class EnemyHandler : MonoBehaviour
     private void handleUpgradeStage(){
         //upgrade the enemy after a boss
         //it always will upgrade after a boss
+
+        
 
         isBoss = false;
 
@@ -533,6 +548,8 @@ public class EnemyHandler : MonoBehaviour
     {
         return NumberAbrev.ParseDouble(currentStage);
     }
+
+    
 
     public void save()
     {

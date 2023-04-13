@@ -11,6 +11,7 @@ public class AutoSaveHandler : MonoBehaviour
     [SerializeField] private PlayerHealthHandler playerHealthHandler;
     [SerializeField] private TutorialHandler tutorialHandler;
     [SerializeField] private StrengthHandler strengthHandler;
+    [SerializeField] private PetsHandler petsHandler;
 
     [SerializeField] private GameObject autoSaveText;
 
@@ -83,5 +84,8 @@ public class AutoSaveHandler : MonoBehaviour
 
         //player strength
         strengthHandler.save();
+
+        //pets
+        petsHandler.save();
     }
 }
