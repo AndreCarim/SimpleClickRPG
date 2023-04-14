@@ -35,7 +35,7 @@ public class Pet : ScriptableObject
     public int level; //0 to 5
     public int bonusAmount;
     public Sprite sprite;
-    public string description;
+    
 
 
     public Rarity getRarity()

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ShowPetsOwned : MonoBehaviour
 {
-    [SerializeField] private PetsPlayerOwn petsPlayerOwn;
+    [SerializeField]private PetsPlayerOwn petsPlayerOwn;
 
     [SerializeField] private GameObject petsOwnedMenu;
 
@@ -17,12 +17,14 @@ public class ShowPetsOwned : MonoBehaviour
     [SerializeField] private SlotHandler[] rarePets; //slots
     [SerializeField] private SlotHandler[] epicPets; //slots
 
+    private SlotHandler slotSelected;
+    private SlotHandler equippedSlot;
+
     [SerializeField] private GameObject petInfo;
     [SerializeField] private Image infoImage;
     [SerializeField] private TextMeshProUGUI infoName;
     [SerializeField] private TextMeshProUGUI infoRarity;
     [SerializeField] private TextMeshProUGUI infoBonus;
-    [SerializeField] private TextMeshProUGUI infoDescription;
     [SerializeField] private TextMeshProUGUI infoLevel;
 
     [SerializeField] private GameObject heartIcon;
@@ -40,7 +42,7 @@ public class ShowPetsOwned : MonoBehaviour
     [SerializeField] private Animator animatorEgg; //this will keep the animation of the bush running
 
 
-    private Pet selectedPet; //when the player selects a pet
+    
 
 
     
@@ -49,6 +51,15 @@ public class ShowPetsOwned : MonoBehaviour
     {
         //cleaning
         clean();
+
+        //handles the equipped icon
+        if (equippedSlot) 
+        { 
+            equippedSlot.slotGotEquipped();
+            equippedSlot.slotGotSelected();
+            setPetInfo(equippedSlot.getPetInSlot());
+        }
+        
         
 
         List<Pet> currentPetsOwned = petsPlayerOwn.getPetsPlayerOwn();
@@ -87,19 +98,25 @@ public class ShowPetsOwned : MonoBehaviour
     //click equip
     public void setNewEquippedPet()
     {
-        petsPlayerOwn.setEquippedPet(selectedPet); //equipping new pet
+        //setting the select surrouding
+
+
+        petsPlayerOwn.setEquippedPet(slotSelected.getPetInSlot()); //equipping new pet
 
         equipButton.SetActive(false); //closing the equip button so the player cant keep pressing
 
         soundHandler.clickSoundHandler();
+
+        //handles the equipped icon;
+        slotSelected.slotGotEquipped();
+        if (equippedSlot) { equippedSlot.slotGotUnequipped(); } //check if it is the first equip of the day
+        equippedSlot = slotSelected;
     }
 
 
 
     public void closePetsPlayerOwnMenu()
     {
-
-
 
         resumeGame();
         petsOwnedMenu.SetActive(false);
@@ -108,18 +125,38 @@ public class ShowPetsOwned : MonoBehaviour
         soundHandler.clickSoundHandler();
     }
 
-    public void setSelectedPet(Pet pet)
+    //this will be called from the slotHandler since any one of the slots can call;
+    public void setSelectedPet(GameObject slot)
     {
-        //if the pet selected is the one he have equipped already, leave the equipp button closed
-        if(pet != petsPlayerOwn.getEquippedPet()) { equipButton.SetActive(true); }
+        clean();// clean everything
+        SlotHandler tempSlot = slot.GetComponent<SlotHandler>();
 
-        selectedPet = pet;
+        //handling the select and equipped icon
+        if (slotSelected) { slotSelected.slotGotUnselected(); }
+        tempSlot.slotGotSelected(); // adding the select icon
+        if (equippedSlot) { equippedSlot.slotGotEquipped(); }
+
+        slotSelected = tempSlot; //so we can know which slot is selected
+    
+
+        //if the pet selected is the one he have equipped already, leave the equipp button closed
+        if(slotSelected.getPetInSlot() != petsPlayerOwn.getEquippedPet()) { equipButton.SetActive(true); }
+
+        setPetInfo(slotSelected.getPetInSlot());
+
+        soundHandler.clickSoundHandler();
+    }
+
+
+    private void setPetInfo(Pet pet)
+    {
+       
+
         petInfo.SetActive(true);
 
         //handles info when player selects
         infoName.text = pet.petName;
         infoImage.sprite = pet.sprite;
-        infoDescription.text = pet.description;
         infoLevel.text = "LVL " + pet.level;
 
 
@@ -168,20 +205,19 @@ public class ShowPetsOwned : MonoBehaviour
                 infoBonus.text = pet.bonusAmount.ToString();
                 break;
         }
-
-
-
-        soundHandler.clickSoundHandler();
     }
-
 
 
     private void clean()
     {
-        selectedPet = null;
+        
         petInfo.SetActive(false);
 
+        if (slotSelected) { slotSelected.slotGotUnselected(); }
+        if (equippedSlot) { equippedSlot.slotGotUnequipped(); }
+        if (equippedSlot) { equippedSlot.slotGotUnselected(); }
 
+        slotSelected = null;
         backPackIcon.SetActive(false);
         heartIcon.SetActive(false);
         gemIcon.SetActive(false);

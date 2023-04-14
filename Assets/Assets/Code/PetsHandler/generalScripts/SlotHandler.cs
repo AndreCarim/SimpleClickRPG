@@ -12,16 +12,23 @@ public class SlotHandler : MonoBehaviour
     private Button button;
 
     [SerializeField] private ShowPetsOwned showPetsOwned;
-    
 
-    //handles information
-    [SerializeField] 
+
+    private GameObject selectIcon;
+    private GameObject equippedIcon;
 
     void Start()
     {
         image = gameObject.GetComponent<Image>();
         button = gameObject.GetComponent<Button>();
         button.onClick.AddListener(OnButtonClick);
+
+
+        //getting the select and equipped icons
+        Transform findSelected = transform.Find("Selected");
+        Transform findEquipped = transform.Find("Equipped");
+        selectIcon = findSelected.gameObject;
+        equippedIcon = findEquipped.gameObject;
     }
 
 
@@ -43,10 +50,43 @@ public class SlotHandler : MonoBehaviour
 
     public void OnButtonClick()
     {
+        //when the player selects the slot
+
         if (petInSlot)
         {
-            showPetsOwned.setSelectedPet(petInSlot);
+            showPetsOwned.setSelectedPet(gameObject);
         }
         
+        //setting the select image.
+    }
+
+    public void slotGotEquipped()
+    {
+        //this will only set the surrounding
+        equippedIcon.SetActive(true);
+    }
+
+    public void slotGotUnequipped()
+    {
+        //this will remove the surrounding
+        equippedIcon.SetActive(false);
+    }
+
+    public void slotGotSelected()
+    {
+       
+        selectIcon.SetActive(true); //player sellected this slot
+    }
+
+    public void slotGotUnselected()
+    {
+        selectIcon.SetActive(false);//the player equipped this pet
+    }
+
+
+
+    public Pet getPetInSlot()
+    {
+        return petInSlot;
     }
 }

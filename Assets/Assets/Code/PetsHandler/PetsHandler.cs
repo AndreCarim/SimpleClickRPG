@@ -255,7 +255,7 @@ public class PetsHandler : MonoBehaviour
         petDuplicateText.SetActive(false);
         
 
-        animatorBush.SetTrigger("ShowPetAnimation");
+        
 
         petShow.SetActive(false);
         okButton.SetActive(false);
