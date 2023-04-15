@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   petName: teste raro 1
   rarity: 1
-  bonus: 0
+  bonus: 1
   level: 0
-  bonusAmount: 50
+  bonusAmountDouble: 0
+  bonusAmountInt: 2
   sprite: {fileID: 21300000, guid: c94b2a59a166547c494b816a2f61daa3, type: 3}
-  description: ashdasuihdas ashdu asdhsa

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   petName: teste comum 2
   rarity: 0
-  bonus: 4
+  bonus: 1
   level: 0
-  bonusAmount: 10
+  bonusAmountDouble: 0
+  bonusAmountInt: 1
   sprite: {fileID: 21300000, guid: c194c2044a77d467a9e14fc4b38ee129, type: 3}
-  description: " Este simp\xE1tico c\xE3ozinho aumenta o dano do jogador em 10%."

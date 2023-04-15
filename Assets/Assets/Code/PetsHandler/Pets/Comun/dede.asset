@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   petName: teste comun 1
   rarity: 0
-  bonus: 0
+  bonus: 1
   level: 0
-  bonusAmount: 10
+  bonusAmountDouble: 0
+  bonusAmountInt: 1
   sprite: {fileID: 21300000, guid: 86693596386134def8603d7a83e3a2e0, type: 3}
-  description: simpatico como um sabio

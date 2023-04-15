@@ -182,27 +182,27 @@ public class ShowPetsOwned : MonoBehaviour
             case Pet.Bonus.Damage:
                 //damage percentage
                 strengthIcon.SetActive(true);
-                infoBonus.text = pet.bonusAmount + "%";
+                infoBonus.text = (pet.bonusAmountDouble * 100) + "%";
                 break;
             case Pet.Bonus.HpAndrecovery:
                 //hpandRecovery percentage
                 heartIcon.SetActive(true);
-                infoBonus.text = pet.bonusAmount + "%";
+                infoBonus.text = (pet.bonusAmountDouble * 100) + "%";
                 break;
             case Pet.Bonus.Gold:
                 //gold percentage
                 goldIcon.SetActive(true);
-                infoBonus.text = pet.bonusAmount + "%";
+                infoBonus.text = (pet.bonusAmountDouble * 100) + "%";
                 break;
             case Pet.Bonus.Backpack:
                 //unit of backpack
                 backPackIcon.SetActive(true);
-                infoBonus.text = pet.bonusAmount.ToString();
+                infoBonus.text = pet.bonusAmountInt.ToString();
                 break;
             case Pet.Bonus.Gems:
                 //gems bonus
                 gemIcon.SetActive(true);
-                infoBonus.text = pet.bonusAmount.ToString();
+                infoBonus.text = pet.bonusAmountInt.ToString();
                 break;
         }
     }

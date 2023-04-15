@@ -13,6 +13,9 @@ public class StrengthHandler : MonoBehaviour
     private double currentUpgradePrice; // the visible price
     private double behindTheScenePrice; //behindTheSceneValue is the value that will keep increasing every update ( currentUpgradePrice + (behindTheSceneValue*2))  
 
+    private double petBonusAmount;// for ex 0.3 == 30%
+    
+   
     [SerializeField]private GoldHandler goldHandler;
 
     [SerializeField] private AudioSource audioSource;
@@ -32,6 +35,7 @@ public class StrengthHandler : MonoBehaviour
         isAdActive = false;
         
         setStrengthPowerText();
+        petBonusAmount = 0;
     }
 
     void OnApplicationPause(bool stats){
@@ -54,6 +58,7 @@ public class StrengthHandler : MonoBehaviour
             playSound();
             setStrengthPowerText();
         }
+
     }
 
 
@@ -87,13 +92,35 @@ public class StrengthHandler : MonoBehaviour
     }
 
 
+    //HANDLES PET
+    public void setPetBonusAmount(double value)
+    {
+        petBonusAmount = value;//setting the new value
 
-    
+        setStrengthPowerText();
+    }
+
+    public void removePetBonusAmount()
+    {
+        petBonusAmount = 0;
+
+        setStrengthPowerText();
+    }
+
+    private double getPetAmountBonus()
+    {
+        //this will calculate how much the pet will give as bonus
+        return currentStrengthPower * petBonusAmount; // ex: 100 power * 0.3 == 130
+    }
+
+
 
     public double getStrengthPower(){
         //this will be called by the damageClickerHandler script
         //everytime a click is done, the script will check the amount of strength player has
-        return currentStrengthPower;
+        //strength + pet percentage tha he my have
+
+        return currentStrengthPower + getPetAmountBonus();
     }
 
     public string getStrengthPowerText()
@@ -121,11 +148,11 @@ public class StrengthHandler : MonoBehaviour
 
         if(currentStrengthPower > 10000)
         {
-            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower, 2);
+            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower + getPetAmountBonus(), 2);
         }
         else
         {
-            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower, 0);
+            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower + getPetAmountBonus(), 0);
         }
         
         

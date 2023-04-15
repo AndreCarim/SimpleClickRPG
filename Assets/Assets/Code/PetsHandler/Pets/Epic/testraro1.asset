@@ -16,6 +16,6 @@ MonoBehaviour:
   rarity: 2
   bonus: 1
   level: 0
-  bonusAmount: 33
+  bonusAmountDouble: 0
+  bonusAmountInt: 3
   sprite: {fileID: 21300000, guid: ef1c85912a28a4cb1a4fb1ae68c6fedf, type: 3}
-  description: wdwa 21 e1e e12 1

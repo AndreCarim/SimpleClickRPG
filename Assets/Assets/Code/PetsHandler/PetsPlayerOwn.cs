@@ -23,7 +23,20 @@ public class PetsPlayerOwn : MonoBehaviour
 
 
 
-    //t
+    void Start()
+    {
+        load();
+
+        if (equippedPet) { equipPet(equippedPet); }
+    }
+
+    void OnApplicationPause(bool stats)
+    {
+        if (stats == true)
+        {
+            save();
+        }
+    }
 
 
 
@@ -43,7 +56,33 @@ public class PetsPlayerOwn : MonoBehaviour
 
     private void unequipPet()
     {
+        if (equippedPet)
+        {
+            switch (equippedPet.bonus)
+            {
+                case Pet.Bonus.Damage:
+                    //damage percentage
+                    strengthHandler.removePetBonusAmount();
+                    break;
+                case Pet.Bonus.HpAndrecovery:
+                    //hpandRecovery percentage
 
+                    break;
+                case Pet.Bonus.Gold:
+                    //gold percentage
+
+                    break;
+                case Pet.Bonus.Backpack:
+                    //unit of backpack
+                    backPackHandler.removePetBonusAmount();
+                    break;
+                case Pet.Bonus.Gems:
+                    //gems bonus
+
+                    break;
+            }
+        }
+        
     }
 
     private void equipPet(Pet pet)
@@ -53,7 +92,31 @@ public class PetsPlayerOwn : MonoBehaviour
         {
             //changes the pet
             equippedPet = pet;
-            
+
+            switch (equippedPet.bonus)
+            {
+                case Pet.Bonus.Damage:
+                    //damage percentage
+                    strengthHandler.setPetBonusAmount(pet.bonusAmountDouble);
+                    break;
+                case Pet.Bonus.HpAndrecovery:
+                    //hpandRecovery percentage
+
+                    break;
+                case Pet.Bonus.Gold:
+                    //gold percentage
+
+                    break;
+                case Pet.Bonus.Backpack:
+                    //unit of backpack
+                    backPackHandler.setPetBonusAmount(pet.bonusAmountInt);
+                    break;
+                case Pet.Bonus.Gems:
+                    //gems bonus
+
+                    break;
+            }
+
         }
     }
 
@@ -82,5 +145,16 @@ public class PetsPlayerOwn : MonoBehaviour
     }
 
 
+
+    public void save()
+    {
+        ES3.Save("equippedPet", equippedPet);
+    }
+
+    public void load()
+    {
+        if (ES3.KeyExists("equippedPet"))
+            equippedPet = ES3.Load<Pet>("equippedPet");
+    }
     
 }

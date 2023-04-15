@@ -33,7 +33,8 @@ public class Pet : ScriptableObject
     }
 
     public int level; //0 to 5
-    public int bonusAmount;
+    public double bonusAmountDouble;//for the percentage and gems
+    public int bonusAmountInt; //for the backpack
     public Sprite sprite;
     
 
