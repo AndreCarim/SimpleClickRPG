@@ -107,7 +107,7 @@ public class StrengthHandler : MonoBehaviour
         setStrengthPowerText();
     }
 
-    private double getPetAmountBonus()
+    public double getPetAmountBonus()
     {
         //this will calculate how much the pet will give as bonus
         return currentStrengthPower * petBonusAmount; // ex: 100 power * 0.3 == 130

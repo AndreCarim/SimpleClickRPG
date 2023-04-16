@@ -89,7 +89,7 @@ public class PetsHandler : MonoBehaviour
         if(amountOfKills >= nextPetEncounter)
         {
             //now, we are going to update the next pet encouter
-            nextPetEncounter = UnityEngine.Random.Range(5,100) + amountOfKills;
+            nextPetEncounter = UnityEngine.Random.Range(5,7) + amountOfKills;
 
             //the player encoutered a new pet
             petEncouter();
@@ -164,7 +164,7 @@ public class PetsHandler : MonoBehaviour
         //checking if the player has the pet or not
         foreach (Pet pet in petsPlayerOwn.getPetsPlayerOwn())
         {
-            if (pet == petFound)
+            if (pet.petId == petFound.petId)
             {
                 playerAlreadyHaveThePetFound();
                 return;
@@ -178,7 +178,7 @@ public class PetsHandler : MonoBehaviour
     private void playerDontHaveThePetFound()
     {
         //new pet
-        petsPlayerOwn.setPetsPlayerOwn(petFound);//add the pet to the petsPlayerOwnList
+        petsPlayerOwn.setPetsPlayerOwn(Instantiate(petFound));//add a copy of pet to the petsPlayerOwnList
 
         petCatchedText.SetActive(true);//set the text
     }
@@ -186,7 +186,7 @@ public class PetsHandler : MonoBehaviour
     private void playerAlreadyHaveThePetFound()
     {
         //duplicate pet
-        magicHandler.increaseAmountOfMagic(25);
+        magicHandler.increaseAmountOfMagic(35);
         petDuplicateText.SetActive(true);
     }
 

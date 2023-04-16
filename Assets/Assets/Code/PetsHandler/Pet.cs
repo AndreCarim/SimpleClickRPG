@@ -37,7 +37,7 @@ public class Pet : ScriptableObject
     public int bonusAmountInt; //for the backpack
     public Sprite sprite;
     public RuntimeAnimatorController animator;
-    
+    public int petId;
 
 
     

@@ -228,12 +228,12 @@ public class InGameMenuHandler : MonoBehaviour
                 case Pet.Bonus.Damage:
                     //damage percentage
                     strengthIcon.SetActive(true);
-                    petBonusText.text = strengthHandler.getStrengthPowerText() + "(" + (tempPet.bonusAmountDouble * 100) + "%)";
+                    petBonusText.text = NumberAbrev.ParseDouble(strengthHandler.getPetAmountBonus(),0) + "(" + (tempPet.bonusAmountDouble * 100) + "%)";
                     break;
                 case Pet.Bonus.MaxHp:
                     //hpandRecovery percentage
                     heartIcon.SetActive(true);
-                    petBonusText.text =playerHealthHandler.getExtraMaxHealthPet() + "(" +(tempPet.bonusAmountDouble * 100) + "%)";
+                    petBonusText.text = playerHealthHandler.getExtraMaxHealthPet() + "(" +(tempPet.bonusAmountDouble * 100) + "%)";
                     break;
                 case Pet.Bonus.Gold:
                     //gold percentage

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SlotHandler : MonoBehaviour
 {
-    private Pet petInSlot;
+    [SerializeField]private Pet petInSlot;
 
     private Image image;
     private Button button;

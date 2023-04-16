@@ -225,46 +225,132 @@ public class ShowPetsOwned : MonoBehaviour
         infoLevel.text = "LVL " + pet.level;
         animatorPet.runtimeAnimatorController = pet.animator;
 
-        //handles the upgradePrice
+        //handles the upgradePrice`common
         //pet level 0 > 1 == 50 magic
         //pet level 1 > 2 == 75 magic
         //pet level 2 > 3 == 100 magic
         //pet level 3 > 4 == 150 magic
         //pet level 4 > 5 == 200 magic
-        switch (pet.level)
-        {
-            case 0:
-                upgradePrice.text = "50";
-                upgradeButton.interactable = true;
-                if (magicHandler.getCurrentAmountOfMagic() < 50) { upgradeButton.interactable = false; }
-                break;
-            case 1:
-                upgradePrice.text = "75";
-                upgradeButton.interactable = true;
-                if (magicHandler.getCurrentAmountOfMagic() < 75) { upgradeButton.interactable = false; }
-                break;
-            case 2:
-                upgradePrice.text = "100";
-                upgradeButton.interactable = true;
-                if (magicHandler.getCurrentAmountOfMagic() < 100) { upgradeButton.interactable = false; }
-                break;
-            case 3:
-                upgradePrice.text = "150";
-                upgradeButton.interactable = true;
-                if (magicHandler.getCurrentAmountOfMagic() < 150) { upgradeButton.interactable = false; }
-                break;
-            case 4:
-                upgradePrice.text = "200";
-                upgradeButton.interactable = true;
-                if (magicHandler.getCurrentAmountOfMagic() < 200) { upgradeButton.interactable = false; }
-                break;
-            case 5:
-                upgradePrice.text = "MAX";
-                upgradeButton.interactable = false;
-                break;
-        }
 
-        if(magicHandler.getCurrentAmountOfMagic() < 75) { upgradeButton.interactable = false; }
+        //handles the upgradePrice`rare
+        //pet level 0 > 1 == 75 magic
+        //pet level 1 > 2 == 125 magic
+        //pet level 2 > 3 == 175 magic
+        //pet level 3 > 4 == 225 magic
+        //pet level 4 > 5 == 300 magic
+
+        //handles the upgradePrice`epic
+        //pet level 0 > 1 == 100 magic
+        //pet level 1 > 2 == 150 magic
+        //pet level 2 > 3 == 200 magic
+        //pet level 3 > 4 == 250 magic
+        //pet level 4 > 5 == 350 magic
+        if (pet.rarity == Pet.Rarity.Common)
+        {
+            switch (pet.level)
+            {
+                case 0:
+                    upgradePrice.text = "50";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 50) { upgradeButton.interactable = false; }
+                    break;
+                case 1:
+                    upgradePrice.text = "75";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 75) { upgradeButton.interactable = false; }
+                    break;
+                case 2:
+                    upgradePrice.text = "100";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 100) { upgradeButton.interactable = false; }
+                    break;
+                case 3:
+                    upgradePrice.text = "150";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 150) { upgradeButton.interactable = false; }
+                    break;
+                case 4:
+                    upgradePrice.text = "200";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 200) { upgradeButton.interactable = false; }
+                    break;
+                case 5:
+                    upgradePrice.text = "MAX";
+                    upgradeButton.interactable = false;
+                    break;
+            }
+        }else if(pet.rarity == Pet.Rarity.Rare)
+        {
+            switch (pet.level)
+            {
+                case 0:
+                    upgradePrice.text = "75";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 75) { upgradeButton.interactable = false; }
+                    break;
+                case 1:
+                    upgradePrice.text = "125";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 125) { upgradeButton.interactable = false; }
+                    break;
+                case 2:
+                    upgradePrice.text = "175";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 175) { upgradeButton.interactable = false; }
+                    break;
+                case 3:
+                    upgradePrice.text = "225";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 225) { upgradeButton.interactable = false; }
+                    break;
+                case 4:
+                    upgradePrice.text = "300";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 300) { upgradeButton.interactable = false; }
+                    break;
+                case 5:
+                    upgradePrice.text = "MAX";
+                    upgradeButton.interactable = false;
+                    break;
+            }
+        }else if(pet.rarity == Pet.Rarity.Epic)
+        {
+            switch (pet.level)
+            {
+                case 0:
+                    upgradePrice.text = "100";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 100) { upgradeButton.interactable = false; }
+                    break;
+                case 1:
+                    upgradePrice.text = "150";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 150) { upgradeButton.interactable = false; }
+                    break;
+                case 2:
+                    upgradePrice.text = "200";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 200) { upgradeButton.interactable = false; }
+                    break;
+                case 3:
+                    upgradePrice.text = "250";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 250) { upgradeButton.interactable = false; }
+                    break;
+                case 4:
+                    upgradePrice.text = "350";
+                    upgradeButton.interactable = true;
+                    if (magicHandler.getCurrentAmountOfMagic() < 350) { upgradeButton.interactable = false; }
+                    break;
+                case 5:
+                    upgradePrice.text = "MAX";
+                    upgradeButton.interactable = false;
+                    break;
+            }
+        }
+        
+
+        
 
 
         switch (pet.rarity)
@@ -353,7 +439,6 @@ public class ShowPetsOwned : MonoBehaviour
     }
 
 
-
     public void save()
     {
         ES3.Save("equippedSlot", equippedSlot);
@@ -361,7 +446,8 @@ public class ShowPetsOwned : MonoBehaviour
 
     public void load()
     {
-        if (ES3.KeyExists("equippedPet"))
+        if (ES3.KeyExists("equippedSlot"))
             equippedSlot = ES3.Load<SlotHandler>("equippedSlot");
     }
+
 }

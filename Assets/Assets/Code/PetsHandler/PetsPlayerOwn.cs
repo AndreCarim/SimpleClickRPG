@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PetsPlayerOwn : MonoBehaviour
 {
-    private List<Pet> petsPlayerOwn = new List<Pet>();
+    [SerializeField]private List<Pet> petsPlayerOwn = new List<Pet>();
 
     private Pet equippedPet;
 
@@ -33,7 +33,7 @@ public class PetsPlayerOwn : MonoBehaviour
     {
         load();
 
-        if (equippedPet) 
+        if (equippedPet != null) 
         { 
             equipPet(equippedPet);
             
@@ -98,6 +98,10 @@ public class PetsPlayerOwn : MonoBehaviour
 
     private void equipPet(Pet pet)
     {
+        
+
+        
+
         //checking if the player has the pet he is trying to equip
         if (petsPlayerOwn.Contains(pet))
         {
@@ -134,33 +138,97 @@ public class PetsPlayerOwn : MonoBehaviour
 
     public void upgradePet(Pet pet)
     {
+        
+
+       
+
         if (petsPlayerOwn.Contains(pet))
         {
-            //handles the upgradePrice
+            //handles the upgradePrice`common
             //pet level 0 > 1 == 50 magic
             //pet level 1 > 2 == 75 magic
             //pet level 2 > 3 == 100 magic
             //pet level 3 > 4 == 150 magic
             //pet level 4 > 5 == 200 magic
+
+            //handles the upgradePrice`rare
+            //pet level 0 > 1 == 75 magic
+            //pet level 1 > 2 == 125 magic
+            //pet level 2 > 3 == 175 magic
+            //pet level 3 > 4 == 225 magic
+            //pet level 4 > 5 == 300 magic
+
+            //handles the upgradePrice`epic
+            //pet level 0 > 1 == 100 magic
+            //pet level 1 > 2 == 150 magic
+            //pet level 2 > 3 == 200 magic
+            //pet level 3 > 4 == 250 magic
+            //pet level 4 > 5 == 350 magic
             //now, I need to check the rarity and if the player has the magic
-            switch (pet.level)
+
+            if (pet.rarity == Pet.Rarity.Common)
             {
-                case 0:
-                    upgrade(50, pet);
-                    break;
-                case 1:
-                    upgrade(75, pet);
-                    break;
-                case 2:
-                    upgrade(100, pet);
-                    break;
-                case 3:
-                    upgrade(150, pet);
-                    break;
-                case 4:
-                    upgrade(200, pet);
-                    break;
+                switch (pet.level)
+                {
+                    case 0:
+                        upgrade(50, pet);
+                        break;
+                    case 1:
+                        upgrade(75, pet);
+                        break;
+                    case 2:
+                        upgrade(100, pet);
+                        break;
+                    case 3:
+                        upgrade(150, pet);
+                        break;
+                    case 4:
+                        upgrade(200, pet);
+                        break;
+                }
+            }else if(pet.rarity == Pet.Rarity.Rare)
+            {
+                switch (pet.level)
+                {
+                    case 0:
+                        upgrade(75, pet);
+                        break;
+                    case 1:
+                        upgrade(125, pet);
+                        break;
+                    case 2:
+                        upgrade(175, pet);
+                        break;
+                    case 3:
+                        upgrade(225, pet);
+                        break;
+                    case 4:
+                        upgrade(300, pet);
+                        break;
+                }
             }
+            else if(pet.rarity == Pet.Rarity.Epic)
+            {
+                switch (pet.level)
+                {
+                    case 0:
+                        upgrade(100, pet);
+                        break;
+                    case 1:
+                        upgrade(150, pet);
+                        break;
+                    case 2:
+                        upgrade(200, pet);
+                        break;
+                    case 3:
+                        upgrade(250, pet);
+                        break;
+                    case 4:
+                        upgrade(350, pet);
+                        break;
+                }
+            }
+            
         }
     }
 
@@ -209,8 +277,12 @@ public class PetsPlayerOwn : MonoBehaviour
     //when the player catches a new pet. When the player dont have the pet yet
     public void setPetsPlayerOwn(Pet newPet)
     {
-        if (!petsPlayerOwn.Contains(newPet))
+
+        if(!petsPlayerOwn.Contains(newPet))
+        {
             petsPlayerOwn.Add(newPet);
+        }
+            
   
     }
 
@@ -231,18 +303,19 @@ public class PetsPlayerOwn : MonoBehaviour
 
     public void save()
     {
-        ES3.Save("equippedPet", equippedPet);
+        ES3.Save("equippedPetFinalAndCorrect", equippedPet);
 
-        ES3.Save("petsPlayerOwn", petsPlayerOwn);
+        ES3.Save("petsPlayerOwnFinalAndCorrect", petsPlayerOwn);
     }
 
     public void load()
     {
-        if (ES3.KeyExists("equippedPet"))
-            equippedPet = ES3.Load<Pet>("equippedPet");
+        
+        if (ES3.KeyExists("equippedPetFinalAndCorrect"))
+            equippedPet = ES3.Load<Pet>("equippedPetFinalAndCorrect");
 
-        if (ES3.KeyExists("petsPlayerOwn"))
-            petsPlayerOwn = ES3.Load<List<Pet>>("petsPlayerOwn");
+        if (ES3.KeyExists("petsPlayerOwnFinalAndCorrect"))
+            petsPlayerOwn = ES3.Load<List<Pet>>("petsPlayerOwnFinalAndCorrect");
     }
     
 }

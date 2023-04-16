@@ -20,3 +20,4 @@ MonoBehaviour:
   bonusAmountInt: 0
   sprite: {fileID: 21300000, guid: 5c3770a201022b94d8a13e78260db644, type: 3}
   animator: {fileID: 9100000, guid: 80625adad43ab7f4bb6e6f6e54910306, type: 2}
+  petId: 15
