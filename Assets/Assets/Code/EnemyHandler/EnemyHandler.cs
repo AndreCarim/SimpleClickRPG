@@ -231,7 +231,7 @@ public class EnemyHandler : MonoBehaviour
             //will handle whatever comes after a boss
 
             //first, give the player some gems.
-            gemHandler.increaseAmountOfGem(UnityEngine.Random.Range(10, 20));
+            gemHandler.increaseAmountOfGem(20);
 
             handleUpgradeStage(); //change sprite for the enemy
             changeSprite(); //from enemy and enemy killed

@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class ShowPetsOwned : MonoBehaviour
 {
-    [SerializeField]private PetsPlayerOwn petsPlayerOwn;
+    [SerializeField] private PetsPlayerOwn petsPlayerOwn;
+
+
 
     [SerializeField] private GameObject petsOwnedMenu;
 
@@ -26,48 +28,58 @@ public class ShowPetsOwned : MonoBehaviour
     [SerializeField] private TextMeshProUGUI infoRarity;
     [SerializeField] private TextMeshProUGUI infoBonus;
     [SerializeField] private TextMeshProUGUI infoLevel;
+    [SerializeField] private TextMeshProUGUI upgradePrice;
+    [SerializeField] private Button upgradeButton;
 
     [SerializeField] private GameObject heartIcon;
     [SerializeField] private GameObject strengthIcon;
     [SerializeField] private GameObject backPackIcon;
     [SerializeField] private GameObject gemIcon;
     [SerializeField] private GameObject goldIcon;
+    [SerializeField] private MagicHandler magicHandler;
+    
 
-    [SerializeField] private GameObject equipButton; 
+    [SerializeField] private GameObject equipButton;
+    [SerializeField] private GameObject unequipButton;
 
     private Color commonColor = new Color(.7f, 1f, .34f);
     private Color rareColor = new Color(1f, .20f, .22f);
     private Color epicColor = new Color(0.98f, .33f, 1f);
 
     [SerializeField] private Animator animatorEgg; //this will keep the animation of the bush running
-
-
+    [SerializeField] private Animator animatorPet;
     
 
 
-    
+
+    void Start()
+    {
+        load();
+    }
+
+    void OnApplicationPause(bool stats)
+    {
+        if (stats == true)
+        {
+            save();
+        }
+    }
+
+
 
     public void openPetsPlayerOwnMenu()
     {
         //cleaning
         clean();
+  
 
-        //handles the equipped icon
-        if (equippedSlot) 
-        { 
-            equippedSlot.slotGotEquipped();
-            equippedSlot.slotGotSelected();
-            setPetInfo(equippedSlot.getPetInSlot());
-        }
         
-        
-
-        List<Pet> currentPetsOwned = petsPlayerOwn.getPetsPlayerOwn();
         int indexCountCommon = 0;
         int indexCountRare = 0;
         int indexCountEpic = 0;
 
-        foreach (Pet pet in currentPetsOwned){
+        foreach (Pet pet in petsPlayerOwn.getPetsPlayerOwn())
+        {
             switch (pet.rarity) // it will check which type of rarity the pet is
             {
                 case Pet.Rarity.Common:
@@ -88,6 +100,16 @@ public class ShowPetsOwned : MonoBehaviour
             }
         }
 
+        //handles the equipped icon
+        if (equippedSlot)
+        {
+            equippedSlot.slotGotEquipped();
+            equippedSlot.slotGotSelected();
+            setPetInfo(equippedSlot.getPetInSlot());
+            unequipButton.SetActive(true);
+            slotSelected = equippedSlot;
+        }
+
 
 
         petsOwnedMenu.SetActive(true);
@@ -104,6 +126,7 @@ public class ShowPetsOwned : MonoBehaviour
         petsPlayerOwn.setEquippedPet(slotSelected.getPetInSlot()); //equipping new pet
 
         equipButton.SetActive(false); //closing the equip button so the player cant keep pressing
+        unequipButton.SetActive(true);
 
         soundHandler.clickSoundHandler();
 
@@ -114,16 +137,51 @@ public class ShowPetsOwned : MonoBehaviour
     }
 
 
+    //unequip the pet
+    public void unequipPet()
+    {
+        if (equippedSlot)
+        {
+            equippedSlot.slotGotUnequipped();
+            equippedSlot.slotGotUnselected();
+            equipButton.SetActive(false);
+            unequipButton.SetActive(false);
+            petsPlayerOwn.unequipPet();
+            equippedSlot = null;
+            slotSelected = null;
+            petInfo.SetActive(false);
+
+        }
+    }
+
+
+    
+
+
 
     public void closePetsPlayerOwnMenu()
     {
 
-        resumeGame();
+        
         petsOwnedMenu.SetActive(false);
 
 
         soundHandler.clickSoundHandler();
+        resumeGame();
     }
+
+
+    //Handles the pet upgrade
+    public void upgradePetButton()
+    {
+        if (slotSelected)
+        {
+            petsPlayerOwn.upgradePet(slotSelected.getPetInSlot());
+            setPetInfo(slotSelected.getPetInSlot());
+        }
+    }
+
+
 
     //this will be called from the slotHandler since any one of the slots can call;
     public void setSelectedPet(GameObject slot)
@@ -140,7 +198,14 @@ public class ShowPetsOwned : MonoBehaviour
     
 
         //if the pet selected is the one he have equipped already, leave the equipp button closed
-        if(slotSelected.getPetInSlot() != petsPlayerOwn.getEquippedPet()) { equipButton.SetActive(true); }
+        if(slotSelected.getPetInSlot() != petsPlayerOwn.getEquippedPet()) 
+        { 
+            equipButton.SetActive(true); 
+        }else if(slotSelected.getPetInSlot() == petsPlayerOwn.getEquippedPet()) 
+        { 
+            //the pet is the same
+            unequipButton.SetActive(true); 
+        }
 
         setPetInfo(slotSelected.getPetInSlot());
 
@@ -158,6 +223,48 @@ public class ShowPetsOwned : MonoBehaviour
         infoName.text = pet.petName;
         infoImage.sprite = pet.sprite;
         infoLevel.text = "LVL " + pet.level;
+        animatorPet.runtimeAnimatorController = pet.animator;
+
+        //handles the upgradePrice
+        //pet level 0 > 1 == 50 magic
+        //pet level 1 > 2 == 75 magic
+        //pet level 2 > 3 == 100 magic
+        //pet level 3 > 4 == 150 magic
+        //pet level 4 > 5 == 200 magic
+        switch (pet.level)
+        {
+            case 0:
+                upgradePrice.text = "50";
+                upgradeButton.interactable = true;
+                if (magicHandler.getCurrentAmountOfMagic() < 50) { upgradeButton.interactable = false; }
+                break;
+            case 1:
+                upgradePrice.text = "75";
+                upgradeButton.interactable = true;
+                if (magicHandler.getCurrentAmountOfMagic() < 75) { upgradeButton.interactable = false; }
+                break;
+            case 2:
+                upgradePrice.text = "100";
+                upgradeButton.interactable = true;
+                if (magicHandler.getCurrentAmountOfMagic() < 100) { upgradeButton.interactable = false; }
+                break;
+            case 3:
+                upgradePrice.text = "150";
+                upgradeButton.interactable = true;
+                if (magicHandler.getCurrentAmountOfMagic() < 150) { upgradeButton.interactable = false; }
+                break;
+            case 4:
+                upgradePrice.text = "200";
+                upgradeButton.interactable = true;
+                if (magicHandler.getCurrentAmountOfMagic() < 200) { upgradeButton.interactable = false; }
+                break;
+            case 5:
+                upgradePrice.text = "MAX";
+                upgradeButton.interactable = false;
+                break;
+        }
+
+        if(magicHandler.getCurrentAmountOfMagic() < 75) { upgradeButton.interactable = false; }
 
 
         switch (pet.rarity)
@@ -184,7 +291,7 @@ public class ShowPetsOwned : MonoBehaviour
                 strengthIcon.SetActive(true);
                 infoBonus.text = (pet.bonusAmountDouble * 100) + "%";
                 break;
-            case Pet.Bonus.HpAndrecovery:
+            case Pet.Bonus.MaxHp:
                 //hpandRecovery percentage
                 heartIcon.SetActive(true);
                 infoBonus.text = (pet.bonusAmountDouble * 100) + "%";
@@ -202,7 +309,7 @@ public class ShowPetsOwned : MonoBehaviour
             case Pet.Bonus.Gems:
                 //gems bonus
                 gemIcon.SetActive(true);
-                infoBonus.text = pet.bonusAmountInt.ToString();
+                infoBonus.text = pet.bonusAmountDouble.ToString();
                 break;
         }
     }
@@ -224,6 +331,8 @@ public class ShowPetsOwned : MonoBehaviour
         goldIcon.SetActive(false);
         strengthIcon.SetActive(false);
         equipButton.SetActive(false);
+        unequipButton.SetActive(false);
+        upgradeButton.interactable = false;
     }
 
 
@@ -232,6 +341,7 @@ public class ShowPetsOwned : MonoBehaviour
         Time.timeScale = 0;
 
         animatorEgg.updateMode = AnimatorUpdateMode.UnscaledTime;
+        animatorPet.updateMode = AnimatorUpdateMode.UnscaledTime;
     }
 
     void resumeGame()
@@ -239,5 +349,19 @@ public class ShowPetsOwned : MonoBehaviour
         Time.timeScale = 1;
 
         animatorEgg.updateMode = AnimatorUpdateMode.Normal;
+        animatorPet.updateMode = AnimatorUpdateMode.Normal;
+    }
+
+
+
+    public void save()
+    {
+        ES3.Save("equippedSlot", equippedSlot);
+    }
+
+    public void load()
+    {
+        if (ES3.KeyExists("equippedPet"))
+            equippedSlot = ES3.Load<SlotHandler>("equippedSlot");
     }
 }

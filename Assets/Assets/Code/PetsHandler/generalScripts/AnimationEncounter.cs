@@ -14,6 +14,8 @@ public class AnimationEncounter : MonoBehaviour
     [SerializeField] private Animator animatorOkButton;
     [SerializeField] private Animator animatorShiny;
 
+    [SerializeField] private SoundHandler soundHandler;
+
 
 
 
@@ -33,6 +35,17 @@ public class AnimationEncounter : MonoBehaviour
     {
         okButton.SetActive(true);
         animatorOkButton.updateMode = AnimatorUpdateMode.UnscaledTime;
+    }
+
+
+    public void bushSound()
+    {
+        soundHandler.bushSoundHandler();
+    }
+
+    public void reviewSound()
+    {
+        soundHandler.revielingSoundHandler();
     }
 
     

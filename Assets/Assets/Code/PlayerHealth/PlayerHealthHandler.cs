@@ -13,6 +13,9 @@ public class PlayerHealthHandler : MonoBehaviour
     private float healPlayerEveryXSeconds; // time between healing
 
     private int timesPlayerDied;
+
+    private double petBonusAmount; //%, 1000 + 100 == 105
+    private double extraMaxHealthPet; // this will hold the value that the pet added to the player max health
     
     
     private float currentTime;
@@ -67,8 +70,8 @@ public class PlayerHealthHandler : MonoBehaviour
     void Start()
     {
         currentTime = 2f;
-        
-        
+
+        petBonusAmount = 0;
 
         load();
         healthBarUpdate();
@@ -222,6 +225,12 @@ public class PlayerHealthHandler : MonoBehaviour
     {
         if (maxHealthPrice <= goldHandler.getCurrentAmountOfGold() && healPlayerEveryXSeconds > 2)
         {
+            //removing the amount given by the player
+            if(petBonusAmount > 0)
+            {
+                currentPlayerMaxHealth = currentPlayerMaxHealth - extraMaxHealthPet;
+            }
+
             //player have the money
             goldHandler.decreaseAmountOfGold(maxHealthPrice);
 
@@ -233,18 +242,49 @@ public class PlayerHealthHandler : MonoBehaviour
 
             audioSourceSeconds.Play();//playing the sound
 
-
+            if(petBonusAmount > 0) { changePetAmountBonus(); }
             setTextHealthMenu();
             healthBarUpdate();
-        }
-
-        
+        }      
     }
+
+
+    //HANDLES PET
+    public void setPetBonusAmount(double value)
+    {
+        petBonusAmount = value;//setting the new value
+
+        changePetAmountBonus();
+
+        healthBarUpdate();
+    }
+
+    public void removePetBonusAmount()
+    {
+        petBonusAmount = 0;
+
+        currentPlayerMaxHealth = currentPlayerMaxHealth - extraMaxHealthPet;
+        extraMaxHealthPet = 0; //cleaning the pet max health
+
+        healthBarUpdate();
+    }
+
+    private void changePetAmountBonus()
+    {
+        //this will calculate how much the pet will give as bonus
+        extraMaxHealthPet = currentPlayerMaxHealth * petBonusAmount; // ex: 100 power * 0.3 == 130
+
+        //add the extra amount to the max health
+        currentPlayerMaxHealth = currentPlayerMaxHealth + extraMaxHealthPet;
+
+    }
+
+
 
 
     private void setTextHealthMenu()
     {
-        everyXsecondsStatsText.text = healPlayerEveryXSeconds.ToString() + "s";
+        everyXsecondsStatsText.text = NumberAbrev.ParseDouble(healPlayerEveryXSeconds) + "s";
         amountHealedStatsText.text = NumberAbrev.ParseDouble(playerHealAmount) + " hp";
         
         if(healPlayerEveryXSeconds > 2)
@@ -339,6 +379,13 @@ public class PlayerHealthHandler : MonoBehaviour
     {
         return NumberAbrev.ParseDouble(totalHealthLostEver);
     }
+
+    public string getExtraMaxHealthPet()
+    {
+        return NumberAbrev.ParseDouble(extraMaxHealthPet,0);
+    }
+
+    
 
 
 

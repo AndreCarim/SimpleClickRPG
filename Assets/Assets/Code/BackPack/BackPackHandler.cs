@@ -12,8 +12,11 @@ public class BackPackHandler : MonoBehaviour
 
     private double currentUpgradePrice;//current price
 
-    private int petBonusAmount;// for ex 1 == 1 extra space
-    private double petTotalItemsValue; //this is the amount of gold the pet will carry (only the gold passing the max amount of gold)
+    //handles the pets for backpack and gold
+    private int petBackpackBonusAmount;// for ex 1 == 1 extra space
+    private double petBackpackTotalItemsValue; //this is the amount of gold the pet will carry (only the gold passing the max amount of gold)
+    private double petGoldBonusAmount; //handles the gold pets, % ex: 100 gold + 30% == 130 gold
+
 
     [SerializeField]private SellHandler sellHandler; // this is just to change the text
     [SerializeField]private GoldHandler goldHandler; // to check if the player has gold to upgrade
@@ -41,8 +44,8 @@ public class BackPackHandler : MonoBehaviour
         //makes life easier
 
 
-        petBonusAmount = 0;
-
+        petBackpackBonusAmount = 0;
+        petGoldBonusAmount = 0;
 
         load();
 
@@ -101,18 +104,18 @@ public class BackPackHandler : MonoBehaviour
         if(currentBackPack < currentBackPackMaxSize){
             //backPack is not full
             currentBackPack++;
-            totalItemsValue += value;
+            totalItemsValue = totalItemsValue + value + getPetGoldAmountBonus(value);//current + dropped + pet bonus
 
             setText();
             checkNoMoreSpaceIcon();
 
 
-        }else if(currentBackPack < currentBackPackMaxSize + petBonusAmount)
+        }else if(currentBackPack < currentBackPackMaxSize + petBackpackBonusAmount)
         {
             //checking if there is a pet
 
             //adding the gold to the pet
-            petTotalItemsValue += value;
+            petBackpackTotalItemsValue += value;
             currentBackPack++;
 
             setText();
@@ -124,33 +127,48 @@ public class BackPackHandler : MonoBehaviour
 
 
     //HANDLES PET
-    public void setPetBonusAmount(int value)
+    public void setPetBackpackBonusAmount(int value)
     {
-        petBonusAmount = value;//setting the new value
+        petBackpackBonusAmount = value;//setting the new value
 
         setText();
         checkNoMoreSpaceIcon();
     }
 
-    public void removePetBonusAmount()
+    public void removePetBackpackBonusAmount()
     {
 
         if (currentBackPack > currentBackPackMaxSize)
         {
             //checking if the player is removing the pet with the full backpack, if so, it
             //needs to remove gold amount
-            totalItemsValue = totalItemsValue - petTotalItemsValue;
-            currentBackPack = currentBackPack - petBonusAmount;
-            petTotalItemsValue = 0;
+            totalItemsValue = totalItemsValue - petBackpackTotalItemsValue;
+            currentBackPack = currentBackPack - petBackpackBonusAmount;
+            petBackpackTotalItemsValue = 0;
         }
 
-        petBonusAmount = 0;
+        petBackpackBonusAmount = 0;
 
 
         checkNoMoreSpaceIcon();
         setText();
     }
 
+    public void setPetGoldBonusAmount(double value)
+    {
+        petGoldBonusAmount = value;//setting the new value
+    }
+
+    public void removePetGoldBonusAmount()
+    {
+        petGoldBonusAmount = 0;
+    }
+
+    public double getPetGoldAmountBonus(double value)
+    {
+        //the value is the amount dropped by the monster
+        return value * petGoldBonusAmount; // ex: 100 power * 0.3 == 130
+    }
 
 
 
@@ -163,14 +181,14 @@ public class BackPackHandler : MonoBehaviour
         //this will be called from the SellHandler script
         currentBackPack = 0;
         totalItemsValue = 0;
-        petTotalItemsValue = 0;
+        petBackpackTotalItemsValue = 0;
 
         checkNoMoreSpaceIcon();
         setText();
     }
 
     public double getTotalItemsValue(){
-        return totalItemsValue + petTotalItemsValue;
+        return totalItemsValue + petBackpackTotalItemsValue;
     }
 
 
@@ -184,16 +202,16 @@ public class BackPackHandler : MonoBehaviour
 
     public void setText(){
         //this will set both the price and space text
-        floatingBackPackCurrentAmountText.text = NumberAbrev.ParseDouble(currentBackPack) + "/" + NumberAbrev.ParseDouble(currentBackPackMaxSize + petBonusAmount);
+        floatingBackPackCurrentAmountText.text = NumberAbrev.ParseDouble(currentBackPack) + "/" + NumberAbrev.ParseDouble(currentBackPackMaxSize + petBackpackBonusAmount);
         
 
         if(totalItemsValue > 10000)
         {
-            currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue + petTotalItemsValue,2); 
+            currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue + petBackpackTotalItemsValue, 2); 
         }
         else
         {
-            currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue + petTotalItemsValue, 0);
+            currentAmountGoldBackpack.text = NumberAbrev.ParseDouble(totalItemsValue + petBackpackTotalItemsValue, 0);
         }
 
         if(currentUpgradePrice > 10000)
@@ -208,7 +226,7 @@ public class BackPackHandler : MonoBehaviour
     }
 
     public bool isFull(){
-        return currentBackPackMaxSize + petBonusAmount == currentBackPack;
+        return currentBackPackMaxSize + petBackpackBonusAmount == currentBackPack;
     }
 
     private void playSound(){
@@ -232,7 +250,7 @@ public class BackPackHandler : MonoBehaviour
     {
         //this will handle the animation of no more space left in the back pack
 
-        if(currentBackPack < currentBackPackMaxSize + petBonusAmount)
+        if(currentBackPack < currentBackPackMaxSize + petBackpackBonusAmount)
         {
             //there are still space left
             noMoreSpaceIcon.SetActive(false);
@@ -257,7 +275,7 @@ public class BackPackHandler : MonoBehaviour
         ES3.Save("currentBackPack", currentBackPack);
         ES3.Save("currentBackPackUpgradePrice", currentUpgradePrice);
         ES3.Save("totalItemsValue", totalItemsValue);
-        ES3.Save("petTotalItemsValue", petTotalItemsValue);
+        ES3.Save("petBackpackTotalItemsValue", petBackpackTotalItemsValue);
     }
 
     private void load()
@@ -266,6 +284,6 @@ public class BackPackHandler : MonoBehaviour
         currentBackPack = ES3.Load<double>("currentBackPack", 0);
         currentUpgradePrice = ES3.Load<double>("currentBackPackUpgradePrice", 10000);
         totalItemsValue = ES3.Load<double>("totalItemsValue", 0);
-        petTotalItemsValue = ES3.Load<double>("petTotalItemsValue", 0);
+        petBackpackTotalItemsValue = ES3.Load<double>("petBackpackTotalItemsValue", 0);
     }
 }

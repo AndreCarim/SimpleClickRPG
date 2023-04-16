@@ -13,33 +13,32 @@ public class SlotHandler : MonoBehaviour
 
     [SerializeField] private ShowPetsOwned showPetsOwned;
 
-
-    private GameObject selectIcon;
-    private GameObject equippedIcon;
-
-    void Start()
-    {
-        image = gameObject.GetComponent<Image>();
-        button = gameObject.GetComponent<Button>();
-        button.onClick.AddListener(OnButtonClick);
+    
 
 
-        //getting the select and equipped icons
-        Transform findSelected = transform.Find("Selected");
-        Transform findEquipped = transform.Find("Equipped");
-        selectIcon = findSelected.gameObject;
-        equippedIcon = findEquipped.gameObject;
-    }
+    [SerializeField]private GameObject selectIcon;
+    [SerializeField] private GameObject equipedIcon;
+
+    
 
 
     public void setPetInSlot(Pet pet)
     {
+        
+        image = gameObject.GetComponent<Image>(); //needs to be here so it will set the image before opens
+        button = gameObject.GetComponent<Button>();
+        button.onClick.AddListener(OnButtonClick);
+
+
+
+
+
         petInSlot = pet;
 
-        setPetInfo();
+        setPetImage();
     }
 
-    private void setPetInfo()
+    private void setPetImage()
     {
         if (petInSlot)
         {
@@ -63,13 +62,13 @@ public class SlotHandler : MonoBehaviour
     public void slotGotEquipped()
     {
         //this will only set the surrounding
-        equippedIcon.SetActive(true);
+        equipedIcon.SetActive(true);
     }
 
     public void slotGotUnequipped()
     {
         //this will remove the surrounding
-        equippedIcon.SetActive(false);
+        equipedIcon.SetActive(false);
     }
 
     public void slotGotSelected()

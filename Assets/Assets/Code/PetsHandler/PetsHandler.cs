@@ -47,7 +47,9 @@ public class PetsHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI petNameAndRarity;
     [SerializeField] private GameObject okButton;
     [SerializeField] private Image petImage;
-    
+
+    [SerializeField] private TextMeshProUGUI gemCurrentAmount;
+
 
     private double findAPetEveryXAmountOfKills; //this will be the handler to get the amount of kills you will need between one find and another;
     private double nextPetEncounter; //the current kill + the findAPetEveryXAmountOfKills
@@ -87,7 +89,7 @@ public class PetsHandler : MonoBehaviour
         if(amountOfKills >= nextPetEncounter)
         {
             //now, we are going to update the next pet encouter
-            nextPetEncounter = UnityEngine.Random.Range(5, 7) + amountOfKills;
+            nextPetEncounter = UnityEngine.Random.Range(5,100) + amountOfKills;
 
             //the player encoutered a new pet
             petEncouter();
@@ -184,7 +186,7 @@ public class PetsHandler : MonoBehaviour
     private void playerAlreadyHaveThePetFound()
     {
         //duplicate pet
-        magicHandler.increaseAmountOfMagic(UnityEngine.Random.Range(5, 20));
+        magicHandler.increaseAmountOfMagic(25);
         petDuplicateText.SetActive(true);
     }
 
@@ -228,6 +230,7 @@ public class PetsHandler : MonoBehaviour
 
         //handles pet information
         petImage.sprite = petFound.sprite; //setting the image to show the pet found
+        animatorPet.runtimeAnimatorController = petFound.animator;
         petNameAndRarity.text = petFound.petName + " - " + petFound.rarity;
 
         //once the animation finishs, it will triger the function inside the bush script
@@ -264,6 +267,7 @@ public class PetsHandler : MonoBehaviour
         petCatchedText.SetActive(false);
         petRanAwayText.SetActive(false);
 
+        gemCurrentAmount.text = NumberAbrev.ParseDouble(gemHandler.getCurrentAmountOfGem());
 
         if(gemHandler.getCurrentAmountOfGem() >= 90)
         {

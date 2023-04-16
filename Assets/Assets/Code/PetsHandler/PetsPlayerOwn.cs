@@ -17,8 +17,14 @@ public class PetsPlayerOwn : MonoBehaviour
     [SerializeField] private StrengthHandler strengthHandler;
     [SerializeField] private PlayerHealthHandler playerHealthHandler;
 
+    [SerializeField] private SoundHandler soundHandler;
 
-
+    
+    //pet level 0 > 1 == 50 magic
+    //pet level 1 > 2 == 75 magic
+    //pet level 2 > 3 == 100 magic
+    //pet level 3 > 4 == 150 magic
+    //pet level 4 > 5 == 200 magic
 
 
 
@@ -27,7 +33,11 @@ public class PetsPlayerOwn : MonoBehaviour
     {
         load();
 
-        if (equippedPet) { equipPet(equippedPet); }
+        if (equippedPet) 
+        { 
+            equipPet(equippedPet);
+            
+        }
     }
 
     void OnApplicationPause(bool stats)
@@ -54,7 +64,7 @@ public class PetsPlayerOwn : MonoBehaviour
     }
 
 
-    private void unequipPet()
+    public void unequipPet()
     {
         if (equippedPet)
         {
@@ -64,23 +74,24 @@ public class PetsPlayerOwn : MonoBehaviour
                     //damage percentage
                     strengthHandler.removePetBonusAmount();
                     break;
-                case Pet.Bonus.HpAndrecovery:
+                case Pet.Bonus.MaxHp:
                     //hpandRecovery percentage
-
+                    playerHealthHandler.removePetBonusAmount();
                     break;
                 case Pet.Bonus.Gold:
                     //gold percentage
-
+                    backPackHandler.removePetGoldBonusAmount();
                     break;
                 case Pet.Bonus.Backpack:
                     //unit of backpack
-                    backPackHandler.removePetBonusAmount();
+                    backPackHandler.removePetBackpackBonusAmount();
                     break;
                 case Pet.Bonus.Gems:
                     //gems bonus
-
+                    gemHandler.removePetBonusAmount();
                     break;
             }
+            equippedPet = null;
         }
         
     }
@@ -99,24 +110,96 @@ public class PetsPlayerOwn : MonoBehaviour
                     //damage percentage
                     strengthHandler.setPetBonusAmount(pet.bonusAmountDouble);
                     break;
-                case Pet.Bonus.HpAndrecovery:
+                case Pet.Bonus.MaxHp:
                     //hpandRecovery percentage
-
+                    playerHealthHandler.setPetBonusAmount(pet.bonusAmountDouble);
                     break;
                 case Pet.Bonus.Gold:
                     //gold percentage
-
+                    backPackHandler.setPetGoldBonusAmount(pet.bonusAmountDouble);
                     break;
                 case Pet.Bonus.Backpack:
                     //unit of backpack
-                    backPackHandler.setPetBonusAmount(pet.bonusAmountInt);
+                    backPackHandler.setPetBackpackBonusAmount(pet.bonusAmountInt);
                     break;
                 case Pet.Bonus.Gems:
                     //gems bonus
-
+                    gemHandler.setPetBonusAmount(pet.bonusAmountDouble);
                     break;
             }
 
+        }
+    }
+
+
+    public void upgradePet(Pet pet)
+    {
+        if (petsPlayerOwn.Contains(pet))
+        {
+            //handles the upgradePrice
+            //pet level 0 > 1 == 50 magic
+            //pet level 1 > 2 == 75 magic
+            //pet level 2 > 3 == 100 magic
+            //pet level 3 > 4 == 150 magic
+            //pet level 4 > 5 == 200 magic
+            //now, I need to check the rarity and if the player has the magic
+            switch (pet.level)
+            {
+                case 0:
+                    upgrade(50, pet);
+                    break;
+                case 1:
+                    upgrade(75, pet);
+                    break;
+                case 2:
+                    upgrade(100, pet);
+                    break;
+                case 3:
+                    upgrade(150, pet);
+                    break;
+                case 4:
+                    upgrade(200, pet);
+                    break;
+            }
+        }
+    }
+
+    private void upgrade(double value, Pet pet)
+    {
+        
+        if (magicHandler.getCurrentAmountOfMagic() >= value)
+        {
+            switch (pet.bonus)
+            {
+                case Pet.Bonus.Damage:
+                    //damage percentage
+                    pet.bonusAmountDouble += 0.1;
+                    pet.level += 1;
+                    break;
+                case Pet.Bonus.MaxHp:
+                    //hpandRecovery percentage
+                    pet.bonusAmountDouble += 0.1;
+                    pet.level += 1;
+                    break;
+                case Pet.Bonus.Gold:
+                    //gold percentage
+                    pet.bonusAmountDouble += 0.1;
+                    pet.level += 1;
+                    break;
+                case Pet.Bonus.Backpack:
+                    //unit of backpack
+                    pet.bonusAmountInt = pet.bonusAmountInt + 1;
+                    pet.level += 1;
+                    break;
+                case Pet.Bonus.Gems:
+                    //gems bonus
+                    pet.bonusAmountDouble += 3;
+                    pet.level += 1;
+                    break;
+            }
+            magicHandler.decreaseAmountOfMagic(value);
+            if(equippedPet == pet) { equipPet(pet); }//reload the bonus of the pet after upgrade
+            soundHandler.upgradeSoundHandler();
         }
     }
 
@@ -149,12 +232,17 @@ public class PetsPlayerOwn : MonoBehaviour
     public void save()
     {
         ES3.Save("equippedPet", equippedPet);
+
+        ES3.Save("petsPlayerOwn", petsPlayerOwn);
     }
 
     public void load()
     {
         if (ES3.KeyExists("equippedPet"))
             equippedPet = ES3.Load<Pet>("equippedPet");
+
+        if (ES3.KeyExists("petsPlayerOwn"))
+            petsPlayerOwn = ES3.Load<List<Pet>>("petsPlayerOwn");
     }
     
 }

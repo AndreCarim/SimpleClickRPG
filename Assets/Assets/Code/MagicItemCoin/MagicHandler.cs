@@ -88,7 +88,7 @@ public class MagicHandler : MonoBehaviour
 
     private void load()
     {
-        currentAmountOfMagic = ES3.Load<double>("currentAmountOfmagic", 0);
+        currentAmountOfMagic = ES3.Load<double>("currentAmountOfMagic", 0);
         totalAmountOfMagicEver = ES3.Load<double>("totalAmountOfMagicEver", 0);
     }
 }

@@ -9,6 +9,8 @@ public class GoldHandler : MonoBehaviour
     
     [SerializeField] private double currentAmountOfGold;
 
+    
+
     //handles the pause menu
     private double totalAmountOfGoldEver;
 
@@ -52,6 +54,8 @@ public class GoldHandler : MonoBehaviour
     }
 
     
+
+
 
     private void setGoldAmountText(){
         if(currentAmountOfGold > 10000)

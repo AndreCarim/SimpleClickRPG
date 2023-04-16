@@ -13,12 +13,17 @@ public class GemHandler : MonoBehaviour
     //handles the pause menu
     [SerializeField] private double totalAmountOfGemEver;
 
+    private double petBonusAmount;// ex: 5 will get extra 5 gems per boss
+    //common +5 gems
+    //rare +10 gems
+    //epic +20 gems
 
     // Start is called before the first frame update
     void Start()
     {
         load();
 
+        petBonusAmount = 0;
 
         setGemAmountText();
     }
@@ -35,10 +40,10 @@ public class GemHandler : MonoBehaviour
 
     public void increaseAmountOfGem(double value)
     {
-        //this will be used by the sell button for example
-        currentAmountOfGem = currentAmountOfGem + value;
+        
+        currentAmountOfGem = currentAmountOfGem + value + petBonusAmount;
 
-        totalAmountOfGemEver += value;//pause menu
+        totalAmountOfGemEver += value + petBonusAmount;//pause menu
 
         setGemAmountText();
     }
@@ -46,13 +51,22 @@ public class GemHandler : MonoBehaviour
     public void decreaseAmountOfGem(double value)
     {
 
-
-        //this will be used by upgrades like backpack and strength
-
         currentAmountOfGem = currentAmountOfGem - value;
 
 
         setGemAmountText();
+    }
+
+
+    //HANDLES PET
+    public void setPetBonusAmount(double value)
+    {
+        petBonusAmount = value;//setting the new value
+    }
+
+    public void removePetBonusAmount()
+    {
+        petBonusAmount = 0;
     }
 
 

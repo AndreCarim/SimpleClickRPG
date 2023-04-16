@@ -11,10 +11,22 @@ public class InGameMenuHandler : MonoBehaviour
     [SerializeField] private PlayerHealthHandler playerHealthHandler;
     [SerializeField] private EnemyHandler enemyHandler;
     [SerializeField] private StrengthHandler strengthHandler;
+    [SerializeField] private PetsPlayerOwn petsPlayerOwn;
 
     //for the stats
     [SerializeField] private GameObject statusMenu;
     [SerializeField] private GameObject statusButton;
+
+    [SerializeField] private GameObject petBonus;
+    
+    [SerializeField] private TextMeshProUGUI petBonusText;
+    [SerializeField] private GameObject strengthIcon;
+    [SerializeField] private GameObject goldIcon;
+    [SerializeField] private GameObject backPackIcon;
+    [SerializeField] private GameObject gemIcon;
+    [SerializeField] private GameObject heartIcon;
+
+       
 
     [SerializeField] private TextMeshProUGUI totalGoldEverText;
     [SerializeField] private TextMeshProUGUI totalPlayerHpLostEverText;
@@ -52,8 +64,8 @@ public class InGameMenuHandler : MonoBehaviour
 
 
     //for handling the menu buttons inside the game Menu
-    private Color menuClickedColor = new Color(1f, .45f, .45f, 1f); // a little transparent when not clicked
-    private Color menuNotClickedColor = new Color(1f, 1f, 1f, .35f); //full color when clicked
+    private Color menuClickedColor = new Color(.88f, 1f, .75f, 1f); // a little transparent when not clicked
+    private Color menuNotClickedColor = new Color(.88f, 1f, .75f, .35f); //full color when clicked
 
 
     //handles the thomas history easteregg
@@ -81,18 +93,17 @@ public class InGameMenuHandler : MonoBehaviour
     //opens status menu
     public void openStatusMenu()
     {
-        if (!statusMenu.activeInHierarchy)//checking to see if it is open already
-        {
-            //this one will open the status menu when the player clicks the status button
-            closeAllMenus();//making sure all the menus are closed
+       
+       //this one will open the status menu when the player clicks the status button
+       closeAllMenus();//making sure all the menus are closed
 
 
-            handleStatus();
-            statusMenu.SetActive(true);
+       handleStatus();
+       statusMenu.SetActive(true);
 
-            setMenuButtonTransparency(statusButton);
-            playSound();
-        }
+       setMenuButtonTransparency(statusButton);
+       playSound();
+        
         
     }
 
@@ -183,6 +194,7 @@ public class InGameMenuHandler : MonoBehaviour
 
 
 
+    
 
 
 
@@ -203,6 +215,44 @@ public class InGameMenuHandler : MonoBehaviour
 
         //gold 
         totalGoldEverText.text = goldHandler.getTotalAmountOfGoldEver();
+        
+
+        //handles the pet
+        if (petsPlayerOwn.getEquippedPet())
+        {
+            petBonus.SetActive(true);
+            Pet tempPet = petsPlayerOwn.getEquippedPet();
+
+            switch (tempPet.bonus)
+            {
+                case Pet.Bonus.Damage:
+                    //damage percentage
+                    strengthIcon.SetActive(true);
+                    petBonusText.text = strengthHandler.getStrengthPowerText() + "(" + (tempPet.bonusAmountDouble * 100) + "%)";
+                    break;
+                case Pet.Bonus.MaxHp:
+                    //hpandRecovery percentage
+                    heartIcon.SetActive(true);
+                    petBonusText.text =playerHealthHandler.getExtraMaxHealthPet() + "(" +(tempPet.bonusAmountDouble * 100) + "%)";
+                    break;
+                case Pet.Bonus.Gold:
+                    //gold percentage
+                    goldIcon.SetActive(true);
+                    petBonusText.text = (tempPet.bonusAmountDouble * 100) + "%";
+                    break;
+                case Pet.Bonus.Backpack:
+                    //unit of backpack
+                    backPackIcon.SetActive(true);
+                    petBonusText.text = tempPet.bonusAmountInt.ToString() + " extra";
+                    break;
+                case Pet.Bonus.Gems:
+                    //gems bonus
+                    gemIcon.SetActive(true);
+                    petBonusText.text = tempPet.bonusAmountDouble.ToString() + " extra";
+                    break;
+            }
+        }
+        
     }
 
 
@@ -212,6 +262,14 @@ public class InGameMenuHandler : MonoBehaviour
         //this will make sure every menu is closed
         statusMenu.SetActive(false);
         gameHistoryMenu.SetActive(false);
+
+        //pet icons
+        goldIcon.SetActive(false);
+        strengthIcon.SetActive(false);
+        heartIcon.SetActive(false);
+        backPackIcon.SetActive(false);
+        gemIcon.SetActive(false);
+        petBonus.SetActive(false);
 
         //this will also change all the transperancy back to transparent 
         gameHistoryButton.GetComponent<Image>().color = menuNotClickedColor;
@@ -268,6 +326,7 @@ public class InGameMenuHandler : MonoBehaviour
     public void clickResume()
     {
         inGameMenuObject.SetActive(false);
+        
         playSound();
         resumeGame();
     }

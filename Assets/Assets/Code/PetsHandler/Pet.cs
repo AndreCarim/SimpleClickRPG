@@ -28,7 +28,7 @@ public class Pet : ScriptableObject
         Gold,
         Backpack,
         Gems,
-        HpAndrecovery,
+        MaxHp,
         Damage
     }
 
@@ -36,11 +36,9 @@ public class Pet : ScriptableObject
     public double bonusAmountDouble;//for the percentage and gems
     public int bonusAmountInt; //for the backpack
     public Sprite sprite;
+    public RuntimeAnimatorController animator;
     
 
 
-    public Rarity getRarity()
-    {
-        return rarity;
-    }
+    
 }
