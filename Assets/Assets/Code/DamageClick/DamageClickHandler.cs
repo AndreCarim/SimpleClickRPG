@@ -59,7 +59,7 @@ public class DamageClickHandler : MonoBehaviour
 
                     // Verifica se o raio atingiu o objeto com a tag desejada
                     RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-                    Debug.Log(1);
+                    
  
                     if (isReadyToClick == true)
                     {

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class GemHandler : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI gemAmountText;
+    [SerializeField] private TextMeshProUGUI gemAmountTextPetEncounter;
 
     [SerializeField] private double currentAmountOfGem;
 
@@ -76,10 +77,12 @@ public class GemHandler : MonoBehaviour
         if (currentAmountOfGem > 10000)
         {
             gemAmountText.text = NumberAbrev.ParseDouble(currentAmountOfGem, 2);
+            gemAmountTextPetEncounter.text = NumberAbrev.ParseDouble(currentAmountOfGem, 2);
         }
         else
         {
             gemAmountText.text = NumberAbrev.ParseDouble(currentAmountOfGem, 0);
+            gemAmountTextPetEncounter.text = NumberAbrev.ParseDouble(currentAmountOfGem, 0);
         }
 
     }

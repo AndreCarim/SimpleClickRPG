@@ -43,6 +43,8 @@ public class PetsHandler : MonoBehaviour
     [SerializeField] private GameObject petRanAwayText;
     [SerializeField] private GameObject petCatchedText;
     [SerializeField] private GameObject petDuplicateText;
+    [SerializeField] private TextMeshProUGUI petDuplicateAmountMagicText;
+    
     
     [SerializeField] private TextMeshProUGUI petNameAndRarity;
     [SerializeField] private GameObject okButton;
@@ -89,7 +91,7 @@ public class PetsHandler : MonoBehaviour
         if(amountOfKills >= nextPetEncounter)
         {
             //now, we are going to update the next pet encouter
-            nextPetEncounter = UnityEngine.Random.Range(5,100) + amountOfKills;
+            nextPetEncounter = UnityEngine.Random.Range(5,6) + amountOfKills;
 
             //the player encoutered a new pet
             petEncouter();
@@ -186,7 +188,22 @@ public class PetsHandler : MonoBehaviour
     private void playerAlreadyHaveThePetFound()
     {
         //duplicate pet
-        magicHandler.increaseAmountOfMagic(35);
+        switch (petFound.rarity)
+        {
+            case Pet.Rarity.Common:
+                petDuplicateAmountMagicText.text = "15";
+                magicHandler.increaseAmountOfMagic(15);
+                break;
+            case Pet.Rarity.Rare:
+                petDuplicateAmountMagicText.text = "25";
+                magicHandler.increaseAmountOfMagic(25);
+                break;
+            case Pet.Rarity.Epic:
+                petDuplicateAmountMagicText.text = "50";
+                magicHandler.increaseAmountOfMagic(50);
+                break;
+        }
+        
         petDuplicateText.SetActive(true);
     }
 
@@ -283,6 +300,8 @@ public class PetsHandler : MonoBehaviour
     //petEncounter//petEncounter//petEncounter//petEncounter//petEncounter//petEncounter//petEncounter
     //petEncounter//petEncounter//petEncounter//petEncounter//petEncounter//petEncounter//petEncounter
 
+
+    
 
     void pauseGame()
     {

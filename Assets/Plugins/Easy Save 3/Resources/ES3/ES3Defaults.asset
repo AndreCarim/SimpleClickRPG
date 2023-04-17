@@ -37,6 +37,7 @@ MonoBehaviour:
     - LeanLocalization
     - LeanLocalization.TMP
     - LeanLocalizationEditor
+    - Purchasing.Common
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1

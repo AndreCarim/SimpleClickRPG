@@ -12,6 +12,8 @@ public class SoundHandler : MonoBehaviour
 
     [SerializeField] AudioSource upgradeSound;
 
+    [SerializeField] AudioSource boughtGemsSound;
+
 
     public void petFoundSoundHandle()
     {
@@ -26,6 +28,11 @@ public class SoundHandler : MonoBehaviour
     public void upgradeSoundHandler()
     {
         upgradeSound.Play();
+    }
+
+    public void boughtGemsSoundHandler()
+    {
+        boughtGemsSound.Play();
     }
 
 
