@@ -13,6 +13,9 @@ public class SoundHandler : MonoBehaviour
     [SerializeField] AudioSource upgradeSound;
 
     [SerializeField] AudioSource boughtGemsSound;
+    [SerializeField] AudioSource clickEnemySound;
+
+    [SerializeField] AudioSource openBottomMenusSound;
 
 
     public void petFoundSoundHandle()
@@ -35,6 +38,15 @@ public class SoundHandler : MonoBehaviour
         boughtGemsSound.Play();
     }
 
+    public void clickEnemySoundHandler()
+    {
+        clickEnemySound.Play();
+    }
+
+    public void openBottomMenusSoundHandler()
+    {
+        openBottomMenusSound.Play();
+    }
 
 
 

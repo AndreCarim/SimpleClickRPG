@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
 //will handle the enemy hp, sound of the click (damage, kill, full inventory);
 //also will be responsible for the healthBar
 //it also calls the backpack to give the item dropped
@@ -34,13 +35,15 @@ public class EnemyHandler : MonoBehaviour
     private double totalDamageGivenEver;
 
 
-    
+
 
 
     [SerializeField] private BackPackHandler backPackHandler;
     [SerializeField] private PlayerHealthHandler playerHealthHandler;
     [SerializeField] private GemHandler gemHandler;
     [SerializeField] private PetsHandler petsHandler;
+
+   
 
     [SerializeField] private TextMeshProUGUI stageText;
     [SerializeField] private TextMeshProUGUI totalAmountKilledText;
@@ -115,7 +118,7 @@ public class EnemyHandler : MonoBehaviour
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
         healEveryXSeconds = 2f; // heal for the enemy
-        damageEveryXSeconds = 5f;//damage to the player
+        damageEveryXSeconds = 3f;//damage to the player
         currentTimeDamage = damageEveryXSeconds;
         changeColorEveryXSeconds = 1.5f; //setting the boss to change color every .5 seconds
 
@@ -249,6 +252,8 @@ public class EnemyHandler : MonoBehaviour
         {
             isBoss = false;
             currentEnemyLevel += 1;
+
+            
             setHowManyEnemiesLeftUntilBoss();//will set the amount of enemies left until the boss
         }
 
@@ -281,12 +286,12 @@ public class EnemyHandler : MonoBehaviour
         enemyDamageToPlayerAmount = enemyDamageToPlayerAmount / 2;
 
         enemyCurrentMaxHealth = enemyCurrentMaxHealth + behindTheSceneHealth; //hp handler
-        behindTheSceneHealth = behindTheSceneHealth + 550; //550 every 10 kills
+        behindTheSceneHealth = behindTheSceneHealth + 400; //550 every 10 kills
         enemyHealAmount = enemyHealAmount + 50; // increasing the amount of healing
         enemyCurrentHealth = enemyCurrentMaxHealth;
-        enemyDamageToPlayerAmount = enemyDamageToPlayerAmount + 50;//increase the amount of damage to player
+        enemyDamageToPlayerAmount = enemyDamageToPlayerAmount + 20;//increase the amount of damage to player
         currentStage += 1; //increase stage
-        dropItemValue = dropItemValue + 50; // incriese drop values
+        dropItemValue = dropItemValue + 100; // incriese drop values
 
         currentEnemyLevel += 1;
 

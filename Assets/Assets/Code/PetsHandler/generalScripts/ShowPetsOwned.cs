@@ -37,6 +37,8 @@ public class ShowPetsOwned : MonoBehaviour
     [SerializeField] private GameObject gemIcon;
     [SerializeField] private GameObject goldIcon;
     [SerializeField] private MagicHandler magicHandler;
+
+    [SerializeField] private TabSwitcher tabSwitcher;
     
 
     [SerializeField] private GameObject equipButton;
@@ -113,7 +115,7 @@ public class ShowPetsOwned : MonoBehaviour
 
 
         petsOwnedMenu.SetActive(true);
-        soundHandler.clickSoundHandler();
+        soundHandler.openBottomMenusSoundHandler();
         pauseGame();
     }
 
@@ -167,6 +169,7 @@ public class ShowPetsOwned : MonoBehaviour
 
 
         soundHandler.clickSoundHandler();
+        tabSwitcher.closePetMenuClick();
         resumeGame();
     }
 

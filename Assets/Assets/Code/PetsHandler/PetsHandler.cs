@@ -91,7 +91,7 @@ public class PetsHandler : MonoBehaviour
         if(amountOfKills >= nextPetEncounter)
         {
             //now, we are going to update the next pet encouter
-            nextPetEncounter = UnityEngine.Random.Range(5,6) + amountOfKills;
+            nextPetEncounter = UnityEngine.Random.Range(5,100) + amountOfKills;
 
             //the player encoutered a new pet
             petEncouter();

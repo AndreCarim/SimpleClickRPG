@@ -17,6 +17,7 @@ public class StoreRealMoneyHandler : MonoBehaviour, IStoreListener
     [SerializeField] private SoundHandler soundHandler;
     [SerializeField] private GameObject finishBuyingGameObject;
     [SerializeField] private TextMeshProUGUI howManyGemsText;
+    [SerializeField] private GameObject realMoneyMenu;
 
 
     private Action OnPurchaseCompleted;
@@ -104,6 +105,22 @@ public class StoreRealMoneyHandler : MonoBehaviour, IStoreListener
 
 
 
+
+    public void openMenu()
+    {
+        realMoneyMenu.SetActive(true);
+        finishBuyingGameObject.SetActive(false);
+        soundHandler.clickSoundHandler();
+        pauseGame();
+    }
+
+    public void closeMenu()
+    {
+        realMoneyMenu.SetActive(false);
+        finishBuyingGameObject.SetActive(false);
+        soundHandler.clickSoundHandler();
+        resumeGame();
+    }
 
 
 
@@ -226,5 +243,20 @@ public class StoreRealMoneyHandler : MonoBehaviour, IStoreListener
 
 
         return PurchaseProcessingResult.Complete;
+    }
+
+
+
+
+
+
+    void pauseGame()
+    {
+        Time.timeScale = 0;
+    }
+
+    void resumeGame()
+    {
+        Time.timeScale = 1;
     }
 }

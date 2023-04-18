@@ -47,8 +47,8 @@ public class AutoClickHandler : MonoBehaviour
     void Start()
     {
         //makes life easier
-        upgradeStrengthAmount = 250; //the amount of strength every upgrade will give to the friend
-        upgradeStrengthPriceAmount = 2000; // the price it will go up every upgrade (sum)
+        upgradeStrengthAmount = 2500; //the amount of strength every upgrade will give to the friend
+        upgradeStrengthPriceAmount = 1000; // the price it will go up every upgrade (sum)
         upgradeTimeSpeedAmount = 0.1f; //the amount of time that it will decrease by upgrade
         upgradeTimePriceAmount = 5; //the price it will increase every upgrade (multiplying)
         //makes life easier
@@ -103,7 +103,7 @@ public class AutoClickHandler : MonoBehaviour
             //handle auto click strength
             if (autoClickStrength == 0)
             {
-                autoClickStrength = 500;//first strength
+                autoClickStrength = 2000;//first strength
             }
             else
             {
@@ -255,7 +255,7 @@ public class AutoClickHandler : MonoBehaviour
     {
         autoClickStrength = ES3.Load<double>("autoClickStrength", 0);
         autoClickEveryXSeconds = ES3.Load<float>("autoClickEveryXSeconds", 2f);
-        autoClickStrengthPrice = ES3.Load<double>("autoClickStrengthPrice", 10000);
+        autoClickStrengthPrice = ES3.Load<double>("autoClickStrengthPrice", 5000);
         autoClickTimePrice = ES3.Load<double>("autoClickTimePrice", 20000);
         isOn = ES3.Load<bool>("isOn", false);
     }

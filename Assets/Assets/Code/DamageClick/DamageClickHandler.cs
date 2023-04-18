@@ -12,7 +12,7 @@ public class DamageClickHandler : MonoBehaviour
 
     [SerializeField]private GameObject popUpText;
 
-    [SerializeField]private AudioSource audioSource;
+    [SerializeField] private SoundHandler soundHandler;
     
     
 
@@ -23,7 +23,7 @@ public class DamageClickHandler : MonoBehaviour
 
     void Start()
     {
-        clickEveryXSeconds = 0.05f; //setting it to be one tenth of a second, so the player can click 10 times per second max
+        clickEveryXSeconds = 0.01f; //setting it to be one tenth of a second, so the player can click 10 times per second max
         currentTime = clickEveryXSeconds;
         isReadyToClick = true;
     }
@@ -108,7 +108,7 @@ public class DamageClickHandler : MonoBehaviour
 
     private void playSound()
     {
-        audioSource.Play();
+        soundHandler.clickEnemySoundHandler();
     }
 
 
