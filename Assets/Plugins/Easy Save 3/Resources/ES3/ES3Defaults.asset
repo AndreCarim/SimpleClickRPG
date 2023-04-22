@@ -32,6 +32,13 @@ MonoBehaviour:
     assemblyNames:
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
+    - CW.Common
+    - LeanCommon
+    - LeanLocalization
+    - LeanLocalization.TMP
+    - LeanLocalizationEditor
+    - PlayFab
+    - Purchasing.Common
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1

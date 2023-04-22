@@ -12,6 +12,10 @@ public class DamageClickHandler : MonoBehaviour
 
     [SerializeField]private GameObject popUpText;
 
+    [SerializeField] private SoundHandler soundHandler;
+    
+    
+
     private float clickEveryXSeconds; //1 is one second, 0.1 is one tenth of a second
     private bool isReadyToClick;
     private float currentTime;
@@ -19,7 +23,7 @@ public class DamageClickHandler : MonoBehaviour
 
     void Start()
     {
-        clickEveryXSeconds = 0.1f; //setting it to be one tenth of a second, so the player can click 10 times per second max
+        clickEveryXSeconds = 0.01f; //setting it to be one tenth of a second, so the player can click 10 times per second max
         currentTime = clickEveryXSeconds;
         isReadyToClick = true;
     }
@@ -39,27 +43,72 @@ public class DamageClickHandler : MonoBehaviour
         }
     }
 
+    public void touched()
+    {
+        if (Input.touchCount > 0)
+        {
+
+            // Percorre todos os toques na tela
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                // Verifica se o toque foi iniciado ou terminado
+                if (Input.GetTouch(i).phase == TouchPhase.Began)
+                {
+                    // Cria um raio a partir do ponto do toque na tela
+                    Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
+
+                    // Verifica se o raio atingiu o objeto com a tag desejada
+                    RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+                    
+ 
+                    if (isReadyToClick == true)
+                    {
+                        handleTouch(Input.GetTouch(i));
+                    } // check to see if the player can click
+                }
+            }
+        }
+    }
 
 
 
-    public void click(){
+    private void handleTouch(Touch touch){
+        
+        
+        
         if(isReadyToClick == true) // check to see if the player can click
         {
+            isReadyToClick = false;
+           
             enemyHandlerCode.setDamage(strengthHandler.getStrengthPower());
 
-            isReadyToClick = false;
+                
 
-            if (Input.touchCount > 0)
+            Vector2 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+
+            GameObject newObj = Instantiate(popUpText, touchPosition, Quaternion.identity);
+            TMP_Text newText = newObj.gameObject.transform.GetChild(0).GetComponent<TMP_Text>();
+
+            if(strengthHandler.getStrengthPower() > 10000)
             {
-                Touch touch = Input.GetTouch(0);
-
-                Vector2 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-
-                GameObject newObj = Instantiate(popUpText, touchPosition, Quaternion.identity);
-                TMP_Text newText = newObj.gameObject.transform.GetChild(0).GetComponent<TMP_Text>();//
-                newText.text = NumberAbrev.ParseDouble(strengthHandler.getStrengthPower(),0);
+                newText.text = NumberAbrev.ParseDouble(strengthHandler.getStrengthPower(), 2);
             }
+            else
+            {
+                newText.text = NumberAbrev.ParseDouble(strengthHandler.getStrengthPower(), 0);
+            }
+
+                
+            playSound();
+                
+            
         } 
+    }
+
+
+    private void playSound()
+    {
+        soundHandler.clickEnemySoundHandler();
     }
 
 

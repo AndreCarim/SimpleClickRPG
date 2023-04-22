@@ -7,12 +7,15 @@ using TMPro;
 public class StrengthHandler : MonoBehaviour
 {
 
-    private double currentStrengthPower;//current power
+    [SerializeField]private double currentStrengthPower;//current power
     private double behindTheScenePower;//current behind the scene power
 
     private double currentUpgradePrice; // the visible price
     private double behindTheScenePrice; //behindTheSceneValue is the value that will keep increasing every update ( currentUpgradePrice + (behindTheSceneValue*2))  
 
+    private double petBonusAmount;// for ex 0.3 == 30%
+    
+   
     [SerializeField]private GoldHandler goldHandler;
 
     [SerializeField] private AudioSource audioSource;
@@ -32,14 +35,10 @@ public class StrengthHandler : MonoBehaviour
         isAdActive = false;
         
         setStrengthPowerText();
+        petBonusAmount = 0;
     }
 
-    void OnApplicationPause(bool stats){
-        if(stats == true)
-        {
-            save();
-        }
-    }
+    
 
 
 
@@ -54,6 +53,7 @@ public class StrengthHandler : MonoBehaviour
             playSound();
             setStrengthPowerText();
         }
+
     }
 
 
@@ -73,27 +73,55 @@ public class StrengthHandler : MonoBehaviour
 
             if(isAdActive == false){//handling strength   
                 currentStrengthPower = currentStrengthPower + behindTheScenePower;
-                behindTheScenePower = behindTheScenePower * 1.1; //increases 10% per upgrade
+                behindTheScenePower = behindTheScenePower + 5; //increases 10% per upgrade
             }
             else if(isAdActive == true){   
-                currentStrengthPower = (currentStrengthPower*1.4) + behindTheScenePower;
-                behindTheScenePower = behindTheScenePower * 1.4;
+                currentStrengthPower = (currentStrengthPower+20) + behindTheScenePower;
+                behindTheScenePower = behindTheScenePower +20;
             }
 
 
-            behindTheScenePrice = behindTheScenePrice * 1.5;//handling price
+            behindTheScenePrice = behindTheScenePrice + 15;//handling price
             currentUpgradePrice = currentUpgradePrice + behindTheScenePrice;
         }
     }
 
 
+    //HANDLES PET
+    public void setPetBonusAmount(double value)
+    {
+        petBonusAmount = value;//setting the new value
 
-    
+        setStrengthPowerText();
+    }
+
+    public void removePetBonusAmount()
+    {
+        petBonusAmount = 0;
+
+        setStrengthPowerText();
+    }
+
+    public double getPetAmountBonus()
+    {
+        //this will calculate how much the pet will give as bonus
+        return currentStrengthPower * petBonusAmount; // ex: 100 power * 0.3 == 130
+    }
+
+
 
     public double getStrengthPower(){
         //this will be called by the damageClickerHandler script
         //everytime a click is done, the script will check the amount of strength player has
-        return currentStrengthPower;
+        //strength + pet percentage tha he my have
+
+        return currentStrengthPower + getPetAmountBonus();
+    }
+
+    public string getStrengthPowerText()
+    {
+        //for the pause menu
+        return NumberAbrev.ParseDouble(currentStrengthPower);
     }
 
     private void setStrengthPower(double newStrength){
@@ -102,8 +130,27 @@ public class StrengthHandler : MonoBehaviour
 
 
     private void setStrengthPowerText(){
-        strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower,0);
-        upgradeStrengthPriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice,0);
+
+        if(currentUpgradePrice > 10000)
+        {
+            upgradeStrengthPriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 2);
+        }
+        else
+        {
+            upgradeStrengthPriceText.text = NumberAbrev.ParseDouble(currentUpgradePrice, 0);
+            
+        }
+
+        if(currentStrengthPower > 10000)
+        {
+            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower + getPetAmountBonus(), 2);
+        }
+        else
+        {
+            strengthPowerText.text = NumberAbrev.ParseDouble(currentStrengthPower + getPetAmountBonus(), 0);
+        }
+        
+        
     }
 
     private void playSound(){
@@ -136,7 +183,9 @@ public class StrengthHandler : MonoBehaviour
             ES3.Save("behindTheScenePower", behindTheScenePower /2);
         }
 
-        ES3.Save("currentUpgradePrice", currentUpgradePrice);
+       
+
+        ES3.Save("currentStrengthUpgradePrice", currentUpgradePrice);
         ES3.Save("behindTheScenePrice", behindTheScenePrice);
         
     }
@@ -144,7 +193,7 @@ public class StrengthHandler : MonoBehaviour
     private void load()
     {
         currentStrengthPower = ES3.Load<double>("currentStrengthPower", 50);
-        currentUpgradePrice = ES3.Load<double>("currentUpgradePrice", 20);
+        currentUpgradePrice = ES3.Load<double>("currentStrengthUpgradePrice", 20);
         behindTheScenePrice = ES3.Load<double>("behindTheScenePrice", 25);
         behindTheScenePower = ES3.Load<double>("behindTheScenePower", 4);
     }

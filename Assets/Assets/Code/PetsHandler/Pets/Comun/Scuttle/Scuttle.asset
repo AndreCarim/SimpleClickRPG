@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28f98067a09389249a863aaa97df142d, type: 3}
+  m_Name: Scuttle
+  m_EditorClassIdentifier: 
+  petName: Scuttle
+  rarity: 0
+  bonus: 1
+  level: 0
+  bonusAmountDouble: 0
+  bonusAmountInt: 1
+  sprite: {fileID: 21300000, guid: 31ce87929f339224a82e9333faedcab7, type: 3}
+  animator: {fileID: 9100000, guid: 96000451519eb3f4dbd9e043b9b979f6, type: 2}
+  petId: 4

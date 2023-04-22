@@ -11,6 +11,9 @@ public class GoldHandler : MonoBehaviour
 
     
 
+    //handles the pause menu
+    private double totalAmountOfGoldEver;
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,32 +25,37 @@ public class GoldHandler : MonoBehaviour
     }
 
 
-    void OnApplicationPause(bool stats){
-        if(stats == true)
-        {
-            save();
-        }
-    }
+    
 
 
     public void increaseAmountOfGold(double value){
         //this will be used by the sell button for example
         currentAmountOfGold = currentAmountOfGold + value;
+
+        totalAmountOfGoldEver += value;//pause menu
+
         setGoldAmountText();
     }
 
     public void decreaseAmountOfGold(double value){
+
+
         //this will be used by upgrades like backpack and strength
+       
         currentAmountOfGold = currentAmountOfGold - value;
+       
+
         setGoldAmountText();
     }
 
     
 
+
+
     private void setGoldAmountText(){
-        if(currentAmountOfGold > 1000)
+        if(currentAmountOfGold > 10000)
         {
-            goldAmountText.text = NumberAbrev.ParseDouble(currentAmountOfGold, 1);
+            goldAmountText.text = NumberAbrev.ParseDouble(currentAmountOfGold, 2);
         }
         else
         {
@@ -60,15 +68,21 @@ public class GoldHandler : MonoBehaviour
         return currentAmountOfGold;
     }
 
+    public string getTotalAmountOfGoldEver()
+    {
+        return NumberAbrev.ParseDouble(totalAmountOfGoldEver);
+    }
+
     public void save()
     {
-        ES3.Save("FinalCurrentAmountOfGold", currentAmountOfGold);
-        
+        ES3.Save("currentAmountOfGold", currentAmountOfGold);
+        ES3.Save("totalAmountOfGoldEver", totalAmountOfGoldEver);
     }
 
     private void load()
     {
-        currentAmountOfGold = ES3.Load<double>("FinalCurrentAmountOfGold", 0); 
+        currentAmountOfGold = ES3.Load<double>("currentAmountOfGold", 0);
+        totalAmountOfGoldEver = ES3.Load<double>("totalAmountOfGoldEver", 0);
     }
 
 }

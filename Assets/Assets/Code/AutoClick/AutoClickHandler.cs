@@ -16,6 +16,8 @@ public class AutoClickHandler : MonoBehaviour
 
     private bool isOn;
 
+    
+
     [SerializeField] private GameObject popUpText;
     [SerializeField] private EnemyHandler enemyHandlerCode;
 
@@ -24,7 +26,7 @@ public class AutoClickHandler : MonoBehaviour
 
     [SerializeField] private GoldHandler goldHandler; // to check if the player has gold to upgrade
 
-
+    [SerializeField] private AudioSource audioSourceDamageSound;
     [SerializeField] private AudioSource audioSourceTimeButton;
     [SerializeField] private AudioSource audioSourceStrengthButton;
 
@@ -35,23 +37,35 @@ public class AutoClickHandler : MonoBehaviour
     [SerializeField] private AudioSource switchAudioSource;
     [SerializeField] private TextMeshProUGUI currentAmountOfAutoClickStrengthText;
 
-
+    //makes life easier
+    private double upgradeStrengthAmount;
+    private double upgradeStrengthPriceAmount;
+    private float upgradeTimeSpeedAmount;
+    private double upgradeTimePriceAmount;
+    //makes life easier
 
     void Start()
     {
+        //makes life easier
+        upgradeStrengthAmount = 2500; //the amount of strength every upgrade will give to the friend
+        upgradeStrengthPriceAmount = 1000; // the price it will go up every upgrade (sum)
+        upgradeTimeSpeedAmount = 0.1f; //the amount of time that it will decrease by upgrade
+        upgradeTimePriceAmount = 5; //the price it will increase every upgrade (multiplying)
+        //makes life easier
+
+
+
+
+
+
+
         load();
         setText();
         setSwitchImage();
     }
 
 
-    void OnApplicationPause(bool stats)
-    {
-        if (stats == true)
-        {
-            save();
-        }
-    }
+    
 
 
     //TIMER
@@ -83,16 +97,16 @@ public class AutoClickHandler : MonoBehaviour
             //handle auto click strength
             if (autoClickStrength == 0)
             {
-                autoClickStrength = 500;//first strength
+                autoClickStrength = 2000;//first strength
             }
             else
             {
-                autoClickStrength = autoClickStrength * 4;
+                autoClickStrength += upgradeStrengthAmount;
             }
 
 
             //handle the new price for the upgrade
-            autoClickStrengthPrice = autoClickStrengthPrice * 800;
+            autoClickStrengthPrice += upgradeStrengthPriceAmount;
 
             playSoundStrength();
             setText();
@@ -112,10 +126,10 @@ public class AutoClickHandler : MonoBehaviour
             {
                 goldHandler.decreaseAmountOfGold(autoClickTimePrice); //decrease the amount of gold
 
-                autoClickEveryXSeconds = autoClickEveryXSeconds - 0.1f; //decrease the total amount of seconds to wait by 0.1 seconds (one tenth of a second)
+                autoClickEveryXSeconds = autoClickEveryXSeconds - upgradeTimeSpeedAmount; //decrease the total amount of seconds to wait by 0.1 seconds (one tenth of a second)
 
 
-                autoClickTimePrice = autoClickTimePrice * 1000; // price will increase by 1000x every upgrade
+                autoClickTimePrice = autoClickTimePrice * upgradeTimePriceAmount; // price will increase by 1000x every upgrade
                 playSoundTime();
                 setText();
             }
@@ -156,6 +170,9 @@ public class AutoClickHandler : MonoBehaviour
         TMP_Text newText = newObj.gameObject.transform.GetChild(0).GetComponent<TMP_Text>();//
         newText.text = NumberAbrev.ParseDouble(autoClickStrength);
 
+
+        playDamageSound();
+
     }
 
 
@@ -169,10 +186,15 @@ public class AutoClickHandler : MonoBehaviour
         audioSourceStrengthButton.Play();
     }
 
+    private void playDamageSound()
+    {
+        audioSourceDamageSound.Play();
+    }
+
 
     private void setText()
     {
-        currentAutoClickTimePriceText.text = NumberAbrev.ParseDouble(autoClickTimePrice);
+        
         if(autoClickEveryXSeconds > 1f)
         {
             currentAutoClickTimePriceText.text = NumberAbrev.ParseDouble(autoClickTimePrice);
@@ -182,16 +204,19 @@ public class AutoClickHandler : MonoBehaviour
             currentAutoClickTimePriceText.text = "MAX";
         }
 
-        currentAutoClickStrengthPriceText.text = NumberAbrev.ParseDouble(autoClickStrengthPrice);
+     
 
-
-        if(autoClickStrength > 1000)
+        if(autoClickStrength > 10000)
         {
-            currentAmountOfAutoClickStrengthText.text = NumberAbrev.ParseDouble(autoClickStrength, 1);
+            currentAmountOfAutoClickStrengthText.text = NumberAbrev.ParseDouble(autoClickStrength, 2);
+            currentAutoClickStrengthPriceText.text = NumberAbrev.ParseDouble(autoClickStrengthPrice, 2);
+            currentAutoClickTimePriceText.text = NumberAbrev.ParseDouble(autoClickTimePrice, 2);
         }
         else
         {
             currentAmountOfAutoClickStrengthText.text = NumberAbrev.ParseDouble(autoClickStrength, 0);
+            currentAutoClickStrengthPriceText.text = NumberAbrev.ParseDouble(autoClickStrengthPrice, 0);
+            currentAutoClickTimePriceText.text = NumberAbrev.ParseDouble(autoClickTimePrice, 0);
         }
         
     }
@@ -209,24 +234,24 @@ public class AutoClickHandler : MonoBehaviour
     }
 
 
-    private void save()
+    public void save()
     {
-        ES3.Save("FinalAutoClickStrength", autoClickStrength);
-        ES3.Save("FinalAutoClickEveryXSeconds", autoClickEveryXSeconds);
-        ES3.Save("FinalAutoClickStrengthPrice", autoClickStrengthPrice);
-        ES3.Save("FinalAutoClickTimePrice", autoClickTimePrice);
-        ES3.Save("FinalIsOn", isOn);
+        ES3.Save("autoClickStrength", autoClickStrength);
+        ES3.Save("autoClickEveryXSeconds", autoClickEveryXSeconds);
+        ES3.Save("autoClickStrengthPrice", autoClickStrengthPrice);
+        ES3.Save("autoClickTimePrice", autoClickTimePrice);
+        ES3.Save("isOn", isOn);
     }
 
 
 
     private void load()
     {
-        autoClickStrength = ES3.Load<double>("FinalAutoClickStrength", 0);
-        autoClickEveryXSeconds = ES3.Load<float>("FinalAutoClickEveryXSeconds", 2f);
-        autoClickStrengthPrice = ES3.Load<double>("FinalAutoClickStrengthPrice", 10000);
-        autoClickTimePrice = ES3.Load<double>("FinalAutoClickTimePrice", 100000);
-        isOn = ES3.Load<bool>("FinalIsOn", false);
+        autoClickStrength = ES3.Load<double>("autoClickStrength", 0);
+        autoClickEveryXSeconds = ES3.Load<float>("autoClickEveryXSeconds", 2f);
+        autoClickStrengthPrice = ES3.Load<double>("autoClickStrengthPrice", 5000);
+        autoClickTimePrice = ES3.Load<double>("autoClickTimePrice", 20000);
+        isOn = ES3.Load<bool>("isOn", false);
     }
 
 

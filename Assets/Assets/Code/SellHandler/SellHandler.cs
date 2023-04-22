@@ -22,7 +22,7 @@ public class SellHandler : MonoBehaviour
     private bool isReadyToSell = true;
     private float currentTime;
     private float startTime = 30f;
-    private string sellStateText = "SELL";
+    private string sellStateText = "$$$";
 
     
     
@@ -41,7 +41,7 @@ public class SellHandler : MonoBehaviour
         if(isReadyToSell == false){ // checking if the player sold something
             currentTime -= 1 * Time.deltaTime; // decreasing the amount of seconds inside the currentTime(starts at 30)
             currentStateOfTheButtonText.text = Mathf.RoundToInt(currentTime).ToString(); // round it to int and then transform it to string
-            if(currentTime <= 0){ //check if the timer is done
+            if(currentTime <= 0.5){ //check if the timer is done
                 isReadyToSell = true; // set the status back to open/true
                 currentStateOfTheButtonText.text = sellStateText; //change the text to sell
                 currentTime = startTime; //set the current time back to 30
