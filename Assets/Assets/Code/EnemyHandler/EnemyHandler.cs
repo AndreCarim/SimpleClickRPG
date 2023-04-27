@@ -593,6 +593,7 @@ public class EnemyHandler : MonoBehaviour
         ES3.Save("enemyDamageToPlayerAmount", enemyDamageToPlayerAmount);
         ES3.Save("totalAmountKilled", totalAmountKilled);
         ES3.Save("totalDamageGivenEver", totalDamageGivenEver);
+        
     }
 
     private void load()

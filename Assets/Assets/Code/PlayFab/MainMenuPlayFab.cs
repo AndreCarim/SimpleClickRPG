@@ -15,6 +15,9 @@ public class MainMenuPlayFab : MonoBehaviour
     [SerializeField] private GameObject resetPage;
     [SerializeField] private GameObject playButton;
 
+    [Header("loadData")]
+    [SerializeField] private LoadData loadData;
+
 
     public TextMeshProUGUI messageText;
 
@@ -61,8 +64,8 @@ public class MainMenuPlayFab : MonoBehaviour
         signInPage.SetActive(false);
         buttons.SetActive(false);
         createAccountPage.SetActive(false);
-        playButton.SetActive(true);
         SubmitName();
+        loadData.GetPlayerData();
     }
 
     public void LoginButton()
@@ -129,16 +132,22 @@ public class MainMenuPlayFab : MonoBehaviour
     {
         Debug.Log("Successful login/account create");
         signInPage.SetActive(false);
-        playButton.SetActive(true);
         createAccountPage.SetActive(false);
         resetPage.SetActive(false);
         buttons.SetActive(false);
         messageText.text = "Welcome ";
+
+        loadData.GetPlayerData();
     }
 
     void OnError(PlayFabError error)
     {
         messageText.text = error.ErrorMessage;
+
+        if(error.ErrorMessage == "Cannot resolve destination host")
+        {
+            messageText.text = "Check your internet connection";
+        }
         Debug.Log(error.GenerateErrorReport());
     }
 

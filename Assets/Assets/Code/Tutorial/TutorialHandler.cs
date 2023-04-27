@@ -34,7 +34,7 @@ public class TutorialHandler : MonoBehaviour
 
         audioSource = gameObject.GetComponent<AudioSource>();
 
-        timePerPhase = 3f; //5 seconds
+        timePerPhase = 1f; //5 seconds
         currentTime = timePerPhase;
         canPassPhase = false;
         currentPhaseIndex = 1;

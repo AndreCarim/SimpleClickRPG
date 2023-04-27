@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
+using System.IO;
 
 public class AutoSaveHandler : MonoBehaviour
 {
@@ -77,7 +78,7 @@ public class AutoSaveHandler : MonoBehaviour
     }
 
 
-    public void save()//save all the game
+    public void save()//save all the game in the phone cache
     {
         //need to add everything I want to save
 
@@ -110,14 +111,57 @@ public class AutoSaveHandler : MonoBehaviour
         showPetsOwned.save();
 
 
-        
+
         //save to the cloud
 
-        
-        
+
+        saveToServer();
     }
 
 
 
-    
+
+    public void saveToServer()// take the saving from the cache and stores to the cloud
+    {
+        //saving the file to the server
+        var cacheSettings = new ES3Settings(ES3.Location.File);//getting the location where data is saved
+        string data = ES3.LoadRawString(cacheSettings);//transform it into a string
+
+        
+
+        // Create a request to save the player data
+        var request = new UpdateUserDataRequest()
+        {
+            Data = new Dictionary<string, string>()
+            {
+                { "myData", data }
+            }
+            
+        };
+        Debug.Log(data);
+
+        // Call the PlayFab API to save the player data
+        PlayFabClientAPI.UpdateUserData(request, OnDataSaved, OnError);
+        
+    }
+
+
+    // Callback for success
+    private void OnDataSaved(UpdateUserDataResult result)
+    {
+        Debug.Log("Data saved successfully!");
+    }
+
+    // Callback for failure
+    private void OnError(PlayFabError error)
+    {
+        Debug.LogError("Data save failed: " + error.ErrorMessage);
+    }
+
+
+
+   
+
+
+
 }
