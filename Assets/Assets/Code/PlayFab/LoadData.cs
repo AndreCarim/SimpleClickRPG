@@ -24,7 +24,7 @@ public class LoadData : MonoBehaviour
     public void GetPlayerData()
     {
         loading.SetActive(true);
-
+        
         // Create a request to load the player data
         var request = new GetUserDataRequest()
         {
@@ -37,8 +37,8 @@ public class LoadData : MonoBehaviour
 
     private void OnDataLoaded(GetUserDataResult result)
     {
-        
 
+        
         // Check if the player data contains "myData"
         if (result.Data.ContainsKey(key))
         {

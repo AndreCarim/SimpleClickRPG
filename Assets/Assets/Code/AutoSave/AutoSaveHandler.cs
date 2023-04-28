@@ -34,7 +34,7 @@ public class AutoSaveHandler : MonoBehaviour
         saveEveryXSeconds = 120;
         currentTime = saveEveryXSeconds;
 
-       
+        
     }
 
     void OnApplicationPause(bool stats)
@@ -126,8 +126,8 @@ public class AutoSaveHandler : MonoBehaviour
         //saving the file to the server
         var cacheSettings = new ES3Settings(ES3.Location.File);//getting the location where data is saved
         string data = ES3.LoadRawString(cacheSettings);//transform it into a string
-
         
+
 
         // Create a request to save the player data
         var request = new UpdateUserDataRequest()
@@ -138,7 +138,7 @@ public class AutoSaveHandler : MonoBehaviour
             }
             
         };
-        Debug.Log(data);
+       
 
         // Call the PlayFab API to save the player data
         PlayFabClientAPI.UpdateUserData(request, OnDataSaved, OnError);
@@ -155,6 +155,7 @@ public class AutoSaveHandler : MonoBehaviour
     // Callback for failure
     private void OnError(PlayFabError error)
     {
+        
         Debug.LogError("Data save failed: " + error.ErrorMessage);
     }
 

@@ -36,7 +36,14 @@ public class MainMenuPlayFab : MonoBehaviour
     //register / login / resetPassword
     public void RegisterButton()
     {
-        if(passwordCreateAccountInput.text.Length < 6)
+        NetworkReachability reachability = Application.internetReachability;
+        if (reachability == NetworkReachability.NotReachable)
+        {
+            messageText.text = "Check your internet connection";
+            return;//checking if the player has internet.
+        }
+
+        if (passwordCreateAccountInput.text.Length < 6)
         {
             messageText.text = "Password too short!";
             return;
@@ -70,6 +77,13 @@ public class MainMenuPlayFab : MonoBehaviour
 
     public void LoginButton()
     {
+        NetworkReachability reachability = Application.internetReachability;
+        if (reachability == NetworkReachability.NotReachable)
+        {
+            messageText.text = "Check your internet connection";
+            return;//checking if the player has internet.
+        }
+        
         var request = new LoginWithEmailAddressRequest
         {
             Email = emailSignInInput.text,
@@ -80,6 +94,13 @@ public class MainMenuPlayFab : MonoBehaviour
 
     public void ResetPasswordButton()
     {
+        NetworkReachability reachability = Application.internetReachability;
+        if (reachability == NetworkReachability.NotReachable)
+        {
+            messageText.text = "Check your internet connection";
+            return;//checking if the player has internet.
+        }
+
         var request = new SendAccountRecoveryEmailRequest
         {
             Email = emailResetPassword.text,

@@ -576,6 +576,11 @@ public class EnemyHandler : MonoBehaviour
         return NumberAbrev.ParseDouble(currentStage);
     }
 
+    public double getDropItemValue()
+    {
+        return dropItemValue;
+    }
+
     
 
     public void save()

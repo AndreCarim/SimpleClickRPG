@@ -19,6 +19,8 @@ public class StoreRealMoneyHandler : MonoBehaviour, IStoreListener
     [SerializeField] private TextMeshProUGUI howManyGemsText;
     [SerializeField] private GameObject realMoneyMenu;
 
+    [SerializeField] private AutoSaveHandler autoSaveHandler;
+
 
     private Action OnPurchaseCompleted;
     private IStoreController StoreController;
@@ -239,7 +241,7 @@ public class StoreRealMoneyHandler : MonoBehaviour, IStoreListener
         }
 
         soundHandler.boughtGemsSoundHandler();
-        
+        autoSaveHandler.save();
 
 
         return PurchaseProcessingResult.Complete;

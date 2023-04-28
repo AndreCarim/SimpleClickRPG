@@ -148,6 +148,7 @@ public class PetsHandler : MonoBehaviour
 
 
             soundHandler.clickSoundHandler();
+            
         }
         
     }
@@ -177,6 +178,7 @@ public class PetsHandler : MonoBehaviour
         petsPlayerOwn.setPetsPlayerOwn(Instantiate(petFound));//add a copy of pet to the petsPlayerOwnList
 
         petCatchedText.SetActive(true);//set the text
+        autoSaveHandler.save();
     }
 
     private void playerAlreadyHaveThePetFound()
@@ -197,7 +199,7 @@ public class PetsHandler : MonoBehaviour
                 magicHandler.increaseAmountOfMagic(50);
                 break;
         }
-        
+        autoSaveHandler.save();
         petDuplicateText.SetActive(true);
     }
 
