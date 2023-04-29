@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using PlayFab;
+using PlayFab.ClientModels;
 
 
 public class InGameMenuHandler : MonoBehaviour
@@ -41,6 +43,8 @@ public class InGameMenuHandler : MonoBehaviour
 
     [SerializeField] private AudioSource clickButton;
 
+    [Header("NameText")]
+    [SerializeField] private TextMeshProUGUI nameText;
 
     //for the history
     [SerializeField] private GameObject gameHistoryMenu;
@@ -57,6 +61,11 @@ public class InGameMenuHandler : MonoBehaviour
     [SerializeField] private GameObject monsterHistoryText;
     [SerializeField] private GameObject petsHistoryText;
     [SerializeField] private GameObject thomasMisteryText;
+
+    [SerializeField] private GameObject createAccountMenu;
+    [SerializeField] private GameObject createAccountButton;
+    [SerializeField] private GameObject logoutButton;
+    [SerializeField] private GameObject openLogoutMenu;
 
     private Color historyClickedColor = new Color(1f, 0.32f, 0.32f, 1f);
     private Color historyNotClicked = new Color(1f, 0.32f, 0.32f, .35f);
@@ -77,6 +86,7 @@ public class InGameMenuHandler : MonoBehaviour
     //opens the general menu showing the stats first
     public void clickOpenInGameMenu()
     {
+        CheckIfPlayerHasEmail();
         inGameMenuObject.SetActive(true);
 
         openStatusMenu(); //every time we open the menu the status will be there;
@@ -122,6 +132,17 @@ public class InGameMenuHandler : MonoBehaviour
             playSound();
         }
         
+    }
+
+    public void openCreateAccountMenu()
+    {
+        createAccountMenu.SetActive(true);
+    }
+
+
+    public void openLogoutMenuButton()
+    {
+        openLogoutMenu.SetActive(true);
     }
     //handles the menus inside the menu
 
@@ -201,6 +222,9 @@ public class InGameMenuHandler : MonoBehaviour
 
     private void handleStatus()
     {
+        //server
+        getPlayerNameFromServer();
+
         //enemy
         totalDamageGivenEverText.text = enemyHandler.getTotalDamageGivenEver();
         currentKillsText.text = enemyHandler.getTotalAmountKilled();
@@ -253,6 +277,31 @@ public class InGameMenuHandler : MonoBehaviour
             }
         }
         
+    }
+
+
+    private void CheckIfPlayerHasEmail()
+    {
+        var request = new GetAccountInfoRequest();
+
+        PlayFabClientAPI.GetAccountInfo(request, OnGetAccountInfoSuccess2, OnGetAccountInfoFailure2);
+    }
+
+    private void OnGetAccountInfoSuccess2(GetAccountInfoResult result)
+    {
+        if (!string.IsNullOrEmpty(result.AccountInfo.PrivateInfo.Email))
+        {
+            createAccountButton.SetActive(false);
+        }
+        else
+        {
+            createAccountButton.SetActive(true);
+        }
+    }
+
+    private void OnGetAccountInfoFailure2(PlayFabError error)
+    {
+        Debug.LogError("Error getting account info: " + error.GenerateErrorReport());
     }
 
 
@@ -320,6 +369,35 @@ public class InGameMenuHandler : MonoBehaviour
         //will change the button transparency when the player clicks on it
         button.GetComponent<Image>().color = historyClickedColor;
     }
+
+
+
+
+    private void getPlayerNameFromServer()
+    {
+        PlayFabClientAPI.GetAccountInfo(new GetAccountInfoRequest(), OnGetAccountInfoSuccess, OnGetAccountInfoFailure);
+    }
+
+    private void OnGetAccountInfoSuccess(GetAccountInfoResult result)
+    {
+        string displayName = result.AccountInfo.TitleInfo.DisplayName;
+
+        nameText.text = displayName;
+        // You can now use the displayName variable to display the player's display name in a text object or anywhere else you need it
+    }
+
+    private void OnGetAccountInfoFailure(PlayFabError error)
+    {
+        Debug.Log("Failed to get account info: " + error.ErrorMessage);
+    }
+
+
+
+
+
+
+
+
 
 
 

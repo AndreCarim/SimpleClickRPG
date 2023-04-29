@@ -6,16 +6,16 @@ using TMPro;
 
 public class BackPackHandler : MonoBehaviour
 {
-    private double currentBackPackMaxSize; //currentBackPackMaxSize
-    private double currentBackPack; // current number of items backpack is holding
-    private double totalItemsValue; //the sum of all the items values
+    [SerializeField] private double currentBackPackMaxSize; //currentBackPackMaxSize
+    [SerializeField] private double currentBackPack; // current number of items backpack is holding
+    [SerializeField] private double totalItemsValue; //the sum of all the items values
 
     private double currentUpgradePrice;//current price
 
     //handles the pets for backpack and gold
-    private int petBackpackBonusAmount;// for ex 1 == 1 extra space
-    private double petBackpackTotalItemsValue; //this is the amount of gold the pet will carry (only the gold passing the max amount of gold)
-    private double petGoldBonusAmount; //handles the gold pets, % ex: 100 gold + 30% == 130 gold
+    [SerializeField]private int petBackpackBonusAmount;// for ex 1 == 1 extra space
+    [SerializeField] private double petBackpackTotalItemsValue; //this is the amount of gold the pet will carry (only the gold passing the max amount of gold)
+    [SerializeField] private double petGoldBonusAmount; //handles the gold pets, % ex: 100 gold + 30% == 130 gold
 
 
     [SerializeField]private SellHandler sellHandler; // this is just to change the text
@@ -136,11 +136,10 @@ public class BackPackHandler : MonoBehaviour
         {
             //checking if the player is removing the pet with the full backpack, if so, it
             //needs to remove gold amount
-            totalItemsValue = totalItemsValue - petBackpackTotalItemsValue;
             currentBackPack = currentBackPack - petBackpackBonusAmount;
-            petBackpackTotalItemsValue = 0;
         }
 
+        petBackpackTotalItemsValue = 0;
         petBackpackBonusAmount = 0;
 
 

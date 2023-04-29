@@ -43,7 +43,7 @@ public class GemHandler : MonoBehaviour
         totalAmountOfGemEver += value + petBonusAmount;//pause menu
 
 
-        leaderBoardHandler.SendGemsLeaderBoard((int)currentAmountOfGem);
+        leaderBoardHandler.SendGemsLeaderBoard((int)totalAmountOfGemEver);
         setGemAmountText();
     }
 
@@ -52,7 +52,7 @@ public class GemHandler : MonoBehaviour
 
         currentAmountOfGem = currentAmountOfGem - value;
 
-        leaderBoardHandler.SendGemsLeaderBoard((int)currentAmountOfGem);
+        leaderBoardHandler.SendGemsLeaderBoard((int)totalAmountOfGemEver);
         setGemAmountText();
     }
 
