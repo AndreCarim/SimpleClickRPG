@@ -17,6 +17,8 @@ public class SoundHandler : MonoBehaviour
 
     [SerializeField] AudioSource openBottomMenusSound;
 
+   
+
 
     public void petFoundSoundHandle()
     {
@@ -48,6 +50,7 @@ public class SoundHandler : MonoBehaviour
         openBottomMenusSound.Play();
     }
 
+ 
 
 
 

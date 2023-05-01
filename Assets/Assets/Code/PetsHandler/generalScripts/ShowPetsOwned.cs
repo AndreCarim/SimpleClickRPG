@@ -206,7 +206,7 @@ public class ShowPetsOwned : MonoBehaviour
 
         setPetInfo(slotSelected.getPetInSlot());
 
-        soundHandler.clickSoundHandler();
+        
     }
 
 

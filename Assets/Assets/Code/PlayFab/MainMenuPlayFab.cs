@@ -33,6 +33,13 @@ public class MainMenuPlayFab : MonoBehaviour
 
     [SerializeField] private GameObject loadingText;
 
+    [Header("loadingBar")]
+    [SerializeField] private GameObject loadingBarObject;
+    [SerializeField] private Slider loadingSlider;
+    [SerializeField] private TextMeshProUGUI loadingTextText;
+    [SerializeField] private GameObject loadingTextTextObject;
+    
+
     public TextMeshProUGUI messageText;
 
     [Header("UI signInPage")]
@@ -53,12 +60,7 @@ public class MainMenuPlayFab : MonoBehaviour
 
 
 
-    void Start()
-    {
-        //check if the player has an account linkid with his android ip
-        checkIfThePlayerHasAnAccountAlready();
-
-    }
+    
 
 
 
@@ -85,6 +87,7 @@ public class MainMenuPlayFab : MonoBehaviour
             return;
         }
 
+        
         var request = new RegisterPlayFabUserRequest
         {
             Email = emailCreateAccountInput.text,
@@ -96,11 +99,16 @@ public class MainMenuPlayFab : MonoBehaviour
 
     void OnRegisterSuccess(RegisterPlayFabUserResult result)
     {
-        messageText.text = "Logged in";
+        
+        
 
         signInPage.SetActive(false);
         buttons.SetActive(false);
         createAccountPage.SetActive(false);
+
+        loadingBarObject.SetActive(true);
+        loadingBarDealing("registered in the server", 1);
+
         SubmitName(usernameCreateAccountInput.text);
 
         
@@ -131,14 +139,15 @@ public class MainMenuPlayFab : MonoBehaviour
 
     void OnSuccess(LoginResult result)
     {
-        Debug.Log("Successful login/account create");
+        
         signInPage.SetActive(false);
         createAccountPage.SetActive(false);
         resetPage.SetActive(false);
         buttons.SetActive(false);
-        
 
-        
+        loadingBarObject.SetActive(true);
+        loadingBarDealing("Logged In the server", 1);
+
 
         loadData.GetPlayerData();
         
@@ -208,7 +217,8 @@ public class MainMenuPlayFab : MonoBehaviour
         resetPage.SetActive(false);
         buttons.SetActive(false);
 
-        
+        loadingBarObject.SetActive(true);
+        loadingBarDealing("logged in the server", 1);
 
         loadData.GetPlayerData();
     }
@@ -259,8 +269,11 @@ public class MainMenuPlayFab : MonoBehaviour
 
 
     #region autoLogin
-    private void checkIfThePlayerHasAnAccountAlready()
+    public void checkIfThePlayerHasAnAccountAlready()
     {
+        loadingBarObject.SetActive(true);
+        loadingBarDealing("Checking if the player has an account", 1);
+
         signInPage.SetActive(false);
         createAccountPage.SetActive(false);
         resetPage.SetActive(false);
@@ -276,14 +289,14 @@ public class MainMenuPlayFab : MonoBehaviour
                 GetPlayerProfile = true
             }
         };
-
+        loadingBarDealing("Getting answers from the server", 2);
         PlayFabClientAPI.LoginWithAndroidDeviceID(request, OnAutoLoginSuccess, OnAutoLoginFail);
     }
 
     private void OnAutoLoginSuccess(LoginResult result)
     {
-        Debug.Log("Logged in successfully!");
         
+        loadingBarDealing("Account found", 3);
 
         signInPage.SetActive(false);
         createAccountPage.SetActive(false);
@@ -294,8 +307,8 @@ public class MainMenuPlayFab : MonoBehaviour
     }
 
     private void OnAutoLoginFail(PlayFabError error)
-    { 
-
+    {
+        loadingBarObject.SetActive(false);
         buttons.SetActive(true);
         loadingText.SetActive(false);
     }
@@ -378,6 +391,14 @@ public class MainMenuPlayFab : MonoBehaviour
         resetPage.SetActive(true);
         playButton.SetActive(false);
         messageText.text = "";
+    }
+
+
+    private void loadingBarDealing(string words, int bar)
+    {
+        loadingTextTextObject.SetActive(true);
+        loadingTextText.text = words;
+        loadingSlider.value = bar;
     }
 
     

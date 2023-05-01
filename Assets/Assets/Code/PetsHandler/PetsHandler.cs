@@ -85,7 +85,7 @@ public class PetsHandler : MonoBehaviour
         if(amountOfKills >= nextPetEncounter)
         {
             //now, we are going to update the next pet encouter
-            nextPetEncounter = UnityEngine.Random.Range(5,100) + amountOfKills;
+            nextPetEncounter = UnityEngine.Random.Range(15,130) + amountOfKills;
 
             //the player encoutered a new pet
             petEncouter();
@@ -117,7 +117,7 @@ public class PetsHandler : MonoBehaviour
         int rarityRoll = UnityEngine.Random.Range(1, 101); // gera um número aleatório entre 1 e 100 para determinar a raridade do pet
         
         
-        if (rarityRoll <= 70) // 70% de chance de ser um pet comum
+        if (rarityRoll <= 89) // 70% de chance de ser um pet comum
         {
             int petRollComun = UnityEngine.Random.Range(0, comumPets.Length); // gera um número aleatório entre  para determinar o pet na lista
             return comumPets[petRollComun];

@@ -5,6 +5,7 @@ using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine.Networking;
 using TMPro;
+using UnityEngine.UI;
 
 
 public class LoadData : MonoBehaviour
@@ -12,11 +13,16 @@ public class LoadData : MonoBehaviour
 
     [SerializeField] private GameObject playButton;
 
-    [SerializeField] private GameObject gettingPlayerDataText;
-    [SerializeField] private GameObject checkingVersionText;
+    
 
 
     [SerializeField] private GameObject updateVersionMessage;
+
+    [Header("loadingBar")]
+    [SerializeField] private GameObject loadingBarObject;
+    [SerializeField] private Slider loadingSlider;
+    [SerializeField] private TextMeshProUGUI loadingText;
+    [SerializeField] private GameObject loadingTextObj;
 
     private string url;
     private string currentGameVersion;
@@ -35,14 +41,14 @@ public class LoadData : MonoBehaviour
 
     public void GetPlayerData()
     {
-        gettingPlayerDataText.SetActive(true);
-        checkingVersionText.SetActive(false);
+        loadingBarDealing("Getting player data from server", 4);
+        
         // Create a request to load the player data
         var request = new GetUserDataRequest()
         {
             Keys = new List<string>() { key }
         };
-
+        loadingBarDealing("Getting player data from server", 5);
         // Call the PlayFab API to load the player data
         PlayFabClientAPI.GetUserData(request, OnDataLoaded, OnError);
     }
@@ -50,7 +56,7 @@ public class LoadData : MonoBehaviour
     private void OnDataLoaded(GetUserDataResult result)
     {
 
-        
+        loadingBarDealing("Data received from server", 6);
         // Check if the player data contains "myData"
         if (result.Data.ContainsKey(key))
         {
@@ -69,7 +75,7 @@ public class LoadData : MonoBehaviour
             Debug.Log("No data found.");
 
         }
-
+        loadingBarDealing("Getting player data from server", 7);
         //link the android to the account
 
         checkAndroidLinked();
@@ -79,14 +85,15 @@ public class LoadData : MonoBehaviour
 
     private void OnError(PlayFabError error)
     {
-        
 
+        loadingBarObject.SetActive(false);
         Debug.LogError("Error loading data: " + error.GenerateErrorReport());
     }
 
 
     private void checkAndroidLinked()
     {
+        loadingBarDealing("Checking if the phone is linked with the account", 8);
         string newAndroidDeviceID = SystemInfo.deviceUniqueIdentifier;
         if (!string.IsNullOrEmpty(newAndroidDeviceID))
         {
@@ -127,6 +134,8 @@ public class LoadData : MonoBehaviour
                 }
             }, OnError);
         }
+
+        loadingBarDealing("Checked done", 9);
     }
 
 
@@ -141,8 +150,7 @@ public class LoadData : MonoBehaviour
     #region checkVersion
     private void InitializeVersionCheck()
     {
-        gettingPlayerDataText.SetActive(false);
-        checkingVersionText.SetActive(true);
+        loadingBarDealing("Getting the current game version", 10);
 
         currentGameVersion = Application.version;
 
@@ -160,10 +168,12 @@ public class LoadData : MonoBehaviour
             Debug.LogError("Player is not logged in.");
             // Implement your login logic here
         }
+        
     }
 
     private void CheckGameVersion()
     {
+        loadingBarDealing("Checking with the server", 11);
         var request = new GetTitleDataRequest
         {
             Keys = new List<string> { "GameVersion" }
@@ -174,6 +184,7 @@ public class LoadData : MonoBehaviour
 
     private void OnGetTitleDataSuccess(GetTitleDataResult result)
     {
+        loadingBarDealing("Checking started!", 12);
         if (result.Data.ContainsKey("GameVersion"))
         {
             string latestGameVersion = result.Data["GameVersion"];
@@ -188,8 +199,7 @@ public class LoadData : MonoBehaviour
             {
                 //the game is uptodate
                 updateVersionMessage.SetActive(false);
-                gettingPlayerDataText.SetActive(false);
-                checkingVersionText.SetActive(false);
+                loadingTextObj.SetActive(false);
                 playButton.SetActive(true);
             }
         }
@@ -197,11 +207,14 @@ public class LoadData : MonoBehaviour
         {
             Debug.LogError("GameVersion not found in TitleData.");
         }
+        loadingBarDealing("Version check done", 13);
+        loadingBarObject.SetActive(false);
     }
 
     private void OnGetTitleDataError(PlayFabError error)
     {
         Debug.LogError("Error fetching TitleData: " + error.GenerateErrorReport());
+        loadingBarObject.SetActive(false);
     }
     #endregion
 
@@ -210,6 +223,12 @@ public class LoadData : MonoBehaviour
     public void openPlaystore()
     {
         Application.OpenURL(url);
+    }
+
+    private void loadingBarDealing(string words, int bar)
+    {
+        loadingText.text = words;
+        loadingSlider.value = bar;
     }
 
 }
