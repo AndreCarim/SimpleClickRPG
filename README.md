@@ -1,5 +1,9 @@
 
 SIMPLE CLICK RPG
+
+This is a game made by me using Unity Engine. It took me about three months to make, I was able to learn a lot with it. I am glad to say it is available at the Google Playstore now! 
+
+The entire code is open source, check it out!
 ## Download
 
 https://play.google.com/store/apps/details?id=com.AcaiSlayerStudio.SimpleClickRpg&pli=1
